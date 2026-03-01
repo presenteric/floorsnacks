@@ -1,0 +1,1627 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NY CCW Exam Prep — FloorSnacks</title>
+  <style>
+    :root {
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --surface-hover: #334155;
+      --border: #334155;
+      --primary: #3b82f6;
+      --primary-hover: #2563eb;
+      --success: #22c55e;
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --text: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --radius: 12px;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 24px 20px 80px;
+    }
+
+    header {
+      text-align: center;
+      padding: 48px 0 32px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    header h1 span { color: var(--primary); }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    /* ---------- landing ---------- */
+    #landing { text-align: center; }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin: 32px 0;
+      text-align: left;
+    }
+
+    .info-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+
+    .info-card h3 {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .info-card p {
+      font-size: 1.15rem;
+      font-weight: 600;
+    }
+
+    .topic-list {
+      text-align: left;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px 28px;
+      margin: 24px 0;
+    }
+
+    .topic-list h2 {
+      font-size: 1.1rem;
+      margin-bottom: 14px;
+      color: var(--text-muted);
+    }
+
+    .topic-list ul {
+      list-style: none;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px 24px;
+    }
+
+    .topic-list li {
+      position: relative;
+      padding-left: 20px;
+      font-size: 0.95rem;
+    }
+
+    .topic-list li::before {
+      content: '→';
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 14px 32px;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 1.05rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+
+    .btn-outline:hover { background: var(--primary); color: #fff; }
+
+    .btn-sm {
+      padding: 10px 20px;
+      font-size: 0.9rem;
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 28px;
+    }
+
+    /* ---------- settings modal ---------- */
+    .settings-row {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      justify-content: center;
+      margin: 20px 0 28px;
+      flex-wrap: wrap;
+    }
+
+    .settings-row label {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .settings-row select {
+      background: var(--surface);
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 14px;
+      font-size: 0.95rem;
+    }
+
+    /* ---------- exam ---------- */
+    #exam { display: none; }
+
+    .progress-bar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      background: var(--bg);
+      padding: 16px 0 12px;
+    }
+
+    .progress-track {
+      height: 6px;
+      background: var(--border);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--primary);
+      border-radius: 3px;
+      transition: width 0.4s ease;
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+
+    .question-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      margin-top: 20px;
+    }
+
+    .question-category {
+      display: inline-block;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--primary);
+      background: rgba(59, 130, 246, 0.12);
+      padding: 4px 10px;
+      border-radius: 6px;
+      margin-bottom: 14px;
+    }
+
+    .question-text {
+      font-size: 1.1rem;
+      font-weight: 500;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    .options { display: flex; flex-direction: column; gap: 10px; }
+
+    .option-btn {
+      display: block;
+      width: 100%;
+      text-align: left;
+      padding: 14px 18px;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: 10px;
+      color: var(--text);
+      font-size: 0.98rem;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .option-btn:hover:not(.locked) {
+      border-color: var(--primary);
+      background: rgba(59, 130, 246, 0.06);
+    }
+
+    .option-btn.selected {
+      border-color: var(--primary);
+      background: rgba(59, 130, 246, 0.1);
+    }
+
+    .option-btn.correct {
+      border-color: var(--success);
+      background: rgba(34, 197, 94, 0.1);
+    }
+
+    .option-btn.incorrect {
+      border-color: var(--danger);
+      background: rgba(239, 68, 68, 0.1);
+    }
+
+    .option-btn.locked { cursor: default; }
+
+    .explanation {
+      margin-top: 18px;
+      padding: 16px 18px;
+      background: rgba(59, 130, 246, 0.06);
+      border-left: 3px solid var(--primary);
+      border-radius: 0 8px 8px 0;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+      display: none;
+    }
+
+    .explanation.visible { display: block; }
+
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 24px;
+    }
+
+    /* ---------- results ---------- */
+    #results { display: none; text-align: center; }
+
+    .score-ring {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 28px;
+    }
+
+    .score-ring svg { transform: rotate(-90deg); }
+
+    .score-ring circle {
+      fill: none;
+      stroke-width: 10;
+    }
+
+    .ring-bg { stroke: var(--border); }
+
+    .ring-fill {
+      stroke: var(--primary);
+      stroke-linecap: round;
+      transition: stroke-dashoffset 1.2s ease;
+    }
+
+    .ring-fill.pass { stroke: var(--success); }
+    .ring-fill.fail { stroke: var(--danger); }
+
+    .score-text {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .score-pct {
+      font-size: 2.8rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .score-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .result-badge {
+      display: inline-block;
+      padding: 8px 22px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 24px;
+    }
+
+    .result-badge.pass { background: rgba(34,197,94,0.15); color: var(--success); }
+    .result-badge.fail { background: rgba(239,68,68,0.15); color: var(--danger); }
+
+    .breakdown {
+      text-align: left;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-top: 28px;
+    }
+
+    .breakdown h3 {
+      font-size: 1rem;
+      margin-bottom: 16px;
+      color: var(--text-muted);
+    }
+
+    .breakdown-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.92rem;
+    }
+
+    .breakdown-row:last-child { border-bottom: none; }
+
+    .breakdown-score { font-weight: 600; }
+    .breakdown-score.good { color: var(--success); }
+    .breakdown-score.bad { color: var(--danger); }
+
+    .review-section { margin-top: 32px; text-align: left; }
+    .review-section h3 {
+      font-size: 1rem;
+      margin-bottom: 16px;
+      color: var(--text-muted);
+    }
+
+    .review-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+
+    .review-card .question-category { margin-bottom: 10px; }
+
+    .review-answer {
+      font-size: 0.9rem;
+      margin-top: 8px;
+    }
+
+    .review-answer.wrong { color: var(--danger); }
+    .review-answer.right { color: var(--success); }
+
+    .disclaimer {
+      margin-top: 48px;
+      padding: 18px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 1.5rem; }
+      .topic-list ul { grid-template-columns: 1fr; }
+      .info-grid { grid-template-columns: 1fr 1fr; }
+      .question-card { padding: 20px 16px; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>NY <span>CCW</span> Exam Prep</h1>
+    <p>Practice test based on the New York State concealed carry training curriculum</p>
+  </header>
+
+  <!-- ==================== LANDING ==================== -->
+  <section id="landing">
+    <div class="info-grid">
+      <div class="info-card">
+        <h3>Questions</h3>
+        <p id="q-count-display">50</p>
+      </div>
+      <div class="info-card">
+        <h3>Passing Score</h3>
+        <p>80%</p>
+      </div>
+      <div class="info-card">
+        <h3>Topics</h3>
+        <p>10 categories</p>
+      </div>
+      <div class="info-card">
+        <h3>Format</h3>
+        <p>Multiple choice</p>
+      </div>
+    </div>
+
+    <div class="topic-list">
+      <h2>Topics Covered</h2>
+      <ul>
+        <li>General Firearm Safety</li>
+        <li>Safe Storage Requirements</li>
+        <li>State &amp; Federal Gun Laws</li>
+        <li>Situational Awareness</li>
+        <li>Conflict De-escalation</li>
+        <li>Alcohol &amp; Drug Effects</li>
+        <li>Law Enforcement Encounters</li>
+        <li>Sensitive &amp; Restricted Places</li>
+        <li>Conflict Management</li>
+        <li>Use of Deadly Physical Force</li>
+      </ul>
+    </div>
+
+    <div class="settings-row">
+      <label for="q-count">Number of questions:</label>
+      <select id="q-count">
+        <option value="10">10 (Quick Quiz)</option>
+        <option value="25">25 (Half Exam)</option>
+        <option value="50" selected>50 (Full Exam)</option>
+      </select>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="startExam()">Start Practice Exam</button>
+    </div>
+  </section>
+
+  <!-- ==================== EXAM ==================== -->
+  <section id="exam">
+    <div class="progress-bar">
+      <div class="progress-track">
+        <div class="progress-fill" id="progress-fill"></div>
+      </div>
+      <div class="progress-label">
+        <span id="progress-text">Question 1 of 50</span>
+        <span id="score-live"></span>
+      </div>
+    </div>
+
+    <div class="question-card" id="question-card">
+      <div class="question-category" id="q-category"></div>
+      <div class="question-text" id="q-text"></div>
+      <div class="options" id="q-options"></div>
+      <div class="explanation" id="q-explanation"></div>
+    </div>
+
+    <div class="nav-row">
+      <button class="btn btn-outline btn-sm" id="btn-prev" onclick="prevQuestion()">← Previous</button>
+      <button class="btn btn-primary btn-sm" id="btn-next" onclick="nextQuestion()">Next →</button>
+    </div>
+  </section>
+
+  <!-- ==================== RESULTS ==================== -->
+  <section id="results">
+    <div class="score-ring">
+      <svg viewBox="0 0 200 200">
+        <circle class="ring-bg" cx="100" cy="100" r="88" />
+        <circle class="ring-fill" id="ring-fill" cx="100" cy="100" r="88"
+          stroke-dasharray="553" stroke-dashoffset="553" />
+      </svg>
+      <div class="score-text">
+        <div class="score-pct" id="score-pct">0%</div>
+        <div class="score-label" id="score-of">0 / 50</div>
+      </div>
+    </div>
+
+    <div id="result-badge" class="result-badge"></div>
+
+    <div class="breakdown" id="breakdown"></div>
+
+    <div class="review-section" id="review-section">
+      <h3>Review Missed Questions</h3>
+      <div id="review-list"></div>
+    </div>
+
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="startExam()">Retake Exam</button>
+      <button class="btn btn-outline" onclick="goHome()">Back to Home</button>
+    </div>
+
+    <div class="disclaimer">
+      <strong>Disclaimer:</strong> This practice exam is for study purposes only and is not
+      affiliated with or endorsed by New York State, the NYSP, NYPD, or any licensing authority.
+      Questions are based on publicly available information about the mandated 16-hour concealed
+      carry training curriculum. Always consult your certified instructor and official legal
+      sources for authoritative guidance.
+    </div>
+  </section>
+</div>
+
+<script>
+const QUESTIONS = [
+  // ===== GENERAL FIREARM SAFETY =====
+  {
+    category: "General Firearm Safety",
+    question: "What is the FIRST rule of firearm safety?",
+    options: [
+      "Always keep the firearm loaded",
+      "Treat every firearm as if it is loaded",
+      "Only point the firearm at things you can see",
+      "Keep the safety on at all times"
+    ],
+    answer: 1,
+    explanation: "The foundational rule of firearm safety is to always treat every firearm as if it is loaded, even if you believe it to be unloaded. This mindset prevents complacency and accidental discharges."
+  },
+  {
+    category: "General Firearm Safety",
+    question: "Where should you keep your finger when you are NOT ready to fire?",
+    options: [
+      "On the trigger for quick response",
+      "Wrapped around the trigger guard",
+      "Off the trigger and outside the trigger guard",
+      "On the safety switch"
+    ],
+    answer: 2,
+    explanation: "Your finger should remain off the trigger and outside the trigger guard until you have made the decision to fire. This is known as 'trigger discipline' and prevents unintentional discharges."
+  },
+  {
+    category: "General Firearm Safety",
+    question: "What does 'muzzle discipline' mean?",
+    options: [
+      "Cleaning the muzzle after every use",
+      "Always keeping the muzzle pointed in a safe direction",
+      "Attaching a muzzle brake to reduce recoil",
+      "Checking the muzzle for obstructions before firing"
+    ],
+    answer: 1,
+    explanation: "Muzzle discipline means always keeping the firearm's muzzle pointed in a safe direction — one where an unintentional discharge would not cause injury or damage."
+  },
+  {
+    category: "General Firearm Safety",
+    question: "Before cleaning a firearm, what is the critical first step?",
+    options: [
+      "Disassemble the firearm completely",
+      "Apply cleaning solvent to the barrel",
+      "Verify the firearm is completely unloaded",
+      "Remove the grips or stock"
+    ],
+    answer: 2,
+    explanation: "Before any cleaning or maintenance, you must verify the firearm is completely unloaded by removing the magazine/ammunition source and visually and physically inspecting the chamber."
+  },
+  {
+    category: "General Firearm Safety",
+    question: "What should you always be sure of before firing a firearm?",
+    options: [
+      "That your hearing protection is in place",
+      "Your target and what is beyond it",
+      "That the wind is in your favor",
+      "That someone is watching you"
+    ],
+    answer: 1,
+    explanation: "You must always be certain of your target and what lies beyond it. Bullets can pass through targets or miss entirely, and you are responsible for every round you fire."
+  },
+  {
+    category: "General Firearm Safety",
+    question: "What type of ammunition should you use in your firearm?",
+    options: [
+      "Any ammunition that physically fits in the chamber",
+      "The cheapest ammunition available",
+      "Only the ammunition specified by the manufacturer for that firearm",
+      "Reloaded ammunition for better performance"
+    ],
+    answer: 2,
+    explanation: "You must only use ammunition that matches the specific caliber and specifications stamped on the firearm by the manufacturer. Using incorrect ammunition can cause catastrophic failure."
+  },
+  {
+    category: "General Firearm Safety",
+    question: "When handing a firearm to another person, what should you do?",
+    options: [
+      "Hand it over quickly to minimize handling time",
+      "Point the muzzle toward the ground between you",
+      "Verify it is unloaded, lock the action open, and hand it with the muzzle pointed in a safe direction",
+      "Keep it loaded so the other person can inspect the ammunition"
+    ],
+    answer: 2,
+    explanation: "When transferring a firearm, always unload it, lock the action open so the chamber is visible, and hand it to the other person with the muzzle pointed in a safe direction."
+  },
+  {
+    category: "General Firearm Safety",
+    question: "What should you wear when discharging a firearm?",
+    options: [
+      "Gloves and a hat",
+      "A bulletproof vest",
+      "Appropriate ear and eye protection",
+      "Long sleeves and pants"
+    ],
+    answer: 2,
+    explanation: "New York State gun safety guidelines require wearing appropriate ear and eye protection when discharging a firearm to prevent hearing damage and protect against debris."
+  },
+  {
+    category: "General Firearm Safety",
+    question: "If a round fails to fire when you pull the trigger (a misfire), what should you do?",
+    options: [
+      "Immediately look down the barrel to check for obstructions",
+      "Pull the trigger again rapidly",
+      "Keep the firearm pointed in a safe direction, wait at least 30 seconds, then carefully eject the round",
+      "Shake the firearm to dislodge the round"
+    ],
+    answer: 2,
+    explanation: "A misfire could be a delayed ignition (hangfire). Keep the muzzle pointed downrange in a safe direction, wait at least 30 seconds, then carefully eject the unfired round. Never look down the barrel."
+  },
+  {
+    category: "General Firearm Safety",
+    question: "Why is it important to regularly clean and maintain your firearm?",
+    options: [
+      "To increase the firearm's resale value",
+      "To ensure reliable function and prevent malfunctions that could be dangerous",
+      "It is only necessary for aesthetic reasons",
+      "Cleaning is optional if you use quality ammunition"
+    ],
+    answer: 1,
+    explanation: "Regular cleaning and maintenance ensures the firearm functions reliably. Residue buildup, corrosion, or worn parts can cause malfunctions that may be dangerous to the shooter or bystanders."
+  },
+
+  // ===== SAFE STORAGE REQUIREMENTS =====
+  {
+    category: "Safe Storage Requirements",
+    question: "Under NY Penal Law §265.45, when are you REQUIRED to securely store firearms in a locked depository?",
+    options: [
+      "At all times, regardless of circumstances",
+      "Only when traveling with the firearm",
+      "When you reside with someone under 18, a prohibited person, or a convicted felon",
+      "Only when you leave the state"
+    ],
+    answer: 2,
+    explanation: "NY Penal Law §265.45 requires secure storage in a locked depository when you live with a minor under 18, someone prohibited from possessing firearms under federal law, someone under an extreme risk protection order, or a convicted felon."
+  },
+  {
+    category: "Safe Storage Requirements",
+    question: "What qualifies as a 'safe storage depository' under New York law?",
+    options: [
+      "Any drawer with a simple lock",
+      "A locked safe or container that is fire, impact, and tamper resistant",
+      "A locked room in your house",
+      "The glove compartment of your vehicle"
+    ],
+    answer: 1,
+    explanation: "A safe storage depository is defined as a locked safe or secure container that is fire-resistant, impact-resistant, and tamper-resistant, and cannot be opened without a key, keypad, combination, or other unlocking mechanism."
+  },
+  {
+    category: "Safe Storage Requirements",
+    question: "How must a firearm be stored in a vehicle under New York law?",
+    options: [
+      "Loaded and within reach of the driver",
+      "In the glove compartment",
+      "Unloaded and securely locked in a safe storage depository out of sight",
+      "Under the driver's seat in a holster"
+    ],
+    answer: 2,
+    explanation: "In New York, firearms in vehicles must be unloaded and locked in a safe storage depository that is out of sight from outside the vehicle. A glove compartment does NOT qualify as adequate storage."
+  },
+  {
+    category: "Safe Storage Requirements",
+    question: "What is the penalty for violating New York's safe storage requirements?",
+    options: [
+      "A verbal warning from law enforcement",
+      "A traffic infraction",
+      "A Class A misdemeanor",
+      "An automatic felony charge"
+    ],
+    answer: 2,
+    explanation: "Failure to safely store firearms as required under §265.45 is a Class A misdemeanor in New York, which can carry up to one year in jail."
+  },
+  {
+    category: "Safe Storage Requirements",
+    question: "Can a minor ever legally access a firearm in New York?",
+    options: [
+      "No, never under any circumstances",
+      "Yes, for lawful hunting or other specifically authorized purposes",
+      "Yes, as long as an adult is in the same building",
+      "Only if the minor has completed a safety course"
+    ],
+    answer: 1,
+    explanation: "New York law provides an exception allowing minors access to firearms for lawful hunting or other activities specifically authorized under law, even under the safe storage requirements."
+  },
+
+  // ===== STATE AND FEDERAL GUN LAWS =====
+  {
+    category: "State & Federal Gun Laws",
+    question: "What is the minimum age to apply for a concealed carry license in New York?",
+    options: [
+      "18 years old",
+      "21 years old",
+      "25 years old",
+      "There is no minimum age"
+    ],
+    answer: 1,
+    explanation: "In New York, you must be at least 21 years old to apply for a handgun license, including a concealed carry permit."
+  },
+  {
+    category: "State & Federal Gun Laws",
+    question: "How many hours of in-person classroom instruction are required for a NY concealed carry license?",
+    options: [
+      "4 hours",
+      "8 hours",
+      "16 hours",
+      "24 hours"
+    ],
+    answer: 2,
+    explanation: "New York's Concealed Carry Improvement Act (CCIA) requires 16 hours of in-person live classroom instruction from a Duly Authorized Instructor."
+  },
+  {
+    category: "State & Federal Gun Laws",
+    question: "What minimum score must you achieve on the written portion of the CCW training?",
+    options: [
+      "60%",
+      "70%",
+      "80%",
+      "90%"
+    ],
+    answer: 2,
+    explanation: "Applicants must pass the written test with a score of at least 80 percent to satisfy the training requirements."
+  },
+  {
+    category: "State & Federal Gun Laws",
+    question: "Which of the following would DISQUALIFY you from obtaining a NY concealed carry license?",
+    options: [
+      "Having a speeding ticket on your record",
+      "Being convicted of a felony",
+      "Being over the age of 65",
+      "Not owning property in New York"
+    ],
+    answer: 1,
+    explanation: "A felony conviction is a permanent disqualifier for firearm possession under both New York State and federal law. Other disqualifiers include certain serious offenses, domestic violence convictions, and involuntary mental health commitments."
+  },
+  {
+    category: "State & Federal Gun Laws",
+    question: "Under federal law (18 U.S.C. §922(g)), which of the following persons is prohibited from possessing a firearm?",
+    options: [
+      "Someone who has received a traffic citation",
+      "Someone who is an unlawful user of or addicted to a controlled substance",
+      "Someone who has been honorably discharged from the military",
+      "Someone who has moved to a different state"
+    ],
+    answer: 1,
+    explanation: "Federal law prohibits firearm possession by unlawful users of or persons addicted to controlled substances, along with convicted felons, fugitives, persons subject to certain restraining orders, and others."
+  },
+  {
+    category: "State & Federal Gun Laws",
+    question: "What does New York law require regarding 'good moral character' for a CCW applicant?",
+    options: [
+      "It is not a requirement in New York",
+      "Applicants must provide character references and demonstrate good moral character as part of the licensing process",
+      "Applicants only need a clean driving record",
+      "Good moral character is assessed solely by a written test"
+    ],
+    answer: 1,
+    explanation: "New York requires that applicants demonstrate 'good moral character' as part of the licensing process. This may involve character references, background checks, social media reviews, and interviews."
+  },
+  {
+    category: "State & Federal Gun Laws",
+    question: "A person with a domestic violence misdemeanor conviction is:",
+    options: [
+      "Eligible for a CCW license after 5 years",
+      "Prohibited from possessing firearms under federal law",
+      "Only restricted from carrying in public",
+      "Eligible if they complete additional training"
+    ],
+    answer: 1,
+    explanation: "Under federal law (the Lautenberg Amendment), a conviction for a misdemeanor crime of domestic violence permanently prohibits firearm possession. This is in addition to any state-level restrictions."
+  },
+  {
+    category: "State & Federal Gun Laws",
+    question: "Private firearm sales in New York require:",
+    options: [
+      "No special requirements between private parties",
+      "A background check conducted through a licensed firearms dealer",
+      "Only a handshake agreement",
+      "Approval from your local police department only"
+    ],
+    answer: 1,
+    explanation: "New York law requires private sales of firearms to go through a licensed firearms dealer who must conduct a background check (NICS). Transfers between immediate family members may have limited exceptions."
+  },
+
+  // ===== SITUATIONAL AWARENESS =====
+  {
+    category: "Situational Awareness",
+    question: "What is the primary purpose of situational awareness for a concealed carry holder?",
+    options: [
+      "To identify potential threats and avoid dangerous situations before they escalate",
+      "To find opportunities to display your firearm",
+      "To follow suspicious people",
+      "To position yourself for the best shot"
+    ],
+    answer: 0,
+    explanation: "Situational awareness is about recognizing and avoiding potential threats before they become dangerous. The goal is prevention and avoidance, not confrontation."
+  },
+  {
+    category: "Situational Awareness",
+    question: "Which of the following is a behavioral indicator that someone may pose a threat?",
+    options: [
+      "Making eye contact and smiling",
+      "Walking at a normal pace on the sidewalk",
+      "Fixating on you while making furtive movements or concealing their hands",
+      "Talking on a cell phone"
+    ],
+    answer: 2,
+    explanation: "Behavioral threat indicators include fixation on a potential target, concealing hands (which could hide a weapon), furtive or nervous movements, and behavior inconsistent with the environment."
+  },
+  {
+    category: "Situational Awareness",
+    question: "When carrying concealed, the concept of 'concealment' means:",
+    options: [
+      "Hiding behind objects during a gunfight",
+      "Keeping your firearm hidden from public view at all times",
+      "Wearing camouflage clothing",
+      "Concealing your identity"
+    ],
+    answer: 1,
+    explanation: "Concealment in the context of concealed carry means keeping your firearm hidden from public view. Proper concealment prevents alarm, avoids confrontations, and is a legal requirement of concealed carry."
+  },
+  {
+    category: "Situational Awareness",
+    question: "What is the best response upon identifying a potentially dangerous situation while carrying concealed?",
+    options: [
+      "Draw your firearm and prepare for conflict",
+      "Confront the potential threat verbally",
+      "Avoid the situation entirely if possible, and move to safety",
+      "Call out to others to warn them"
+    ],
+    answer: 2,
+    explanation: "The best response is avoidance. If you identify a potential threat, remove yourself from the situation if possible. Drawing a firearm should be a last resort when escape is not possible and there is an imminent threat of death or serious injury."
+  },
+  {
+    category: "Situational Awareness",
+    question: "Why should a concealed carry holder avoid unnecessary display of their firearm?",
+    options: [
+      "It can cause public alarm, may constitute a crime (brandishing), and could escalate a situation",
+      "It will damage the firearm's finish",
+      "It is only a concern in government buildings",
+      "Display is fine as long as you have a permit"
+    ],
+    answer: 0,
+    explanation: "Unnecessarily displaying a firearm can cause public panic, may constitute criminal brandishing or menacing, and can escalate situations that might otherwise be resolved peacefully. Your permit authorizes concealed carry, not open display."
+  },
+
+  // ===== CONFLICT DE-ESCALATION =====
+  {
+    category: "Conflict De-escalation",
+    question: "What is the MOST important principle of conflict de-escalation for a concealed carry holder?",
+    options: [
+      "Always stand your ground to show strength",
+      "Avoiding and withdrawing from confrontation whenever safely possible",
+      "Displaying your firearm to deter aggression",
+      "Using a loud, commanding voice to dominate the situation"
+    ],
+    answer: 1,
+    explanation: "The most important de-escalation principle is avoidance and withdrawal. A concealed carry holder has a heightened responsibility to avoid confrontations because every encounter they're in is one that involves a firearm."
+  },
+  {
+    category: "Conflict De-escalation",
+    question: "Which of the following is an effective verbal de-escalation technique?",
+    options: [
+      "Matching the aggressor's volume and tone",
+      "Using a calm, steady voice and non-threatening language",
+      "Issuing ultimatums and threats",
+      "Ignoring the person completely and turning your back"
+    ],
+    answer: 1,
+    explanation: "Speaking in a calm, measured tone with non-threatening language can reduce tension. Matching aggression escalates the situation, while completely ignoring someone can also provoke further aggression."
+  },
+  {
+    category: "Conflict De-escalation",
+    question: "In a road rage incident, what should a concealed carry holder do?",
+    options: [
+      "Get out of the vehicle and confront the other driver",
+      "Display the firearm through the window as a warning",
+      "Do not engage, avoid eye contact, drive to a safe public location, and call 911 if necessary",
+      "Follow the other driver to get their license plate number"
+    ],
+    answer: 2,
+    explanation: "In a road rage situation, do not engage. Avoid eye contact, do not respond to gestures, drive to a well-populated public location, and call 911 if you feel threatened. Never display or use a firearm in a road rage scenario unless facing imminent deadly force."
+  },
+  {
+    category: "Conflict De-escalation",
+    question: "What is a key non-verbal de-escalation strategy?",
+    options: [
+      "Crossing your arms and staring down the aggressor",
+      "Creating physical distance between yourself and the potential threat",
+      "Pointing at the aggressor to show confidence",
+      "Clenching your fists to show readiness"
+    ],
+    answer: 1,
+    explanation: "Creating physical distance is a critical non-verbal de-escalation strategy. Distance gives you more time to react, more options to escape, and reduces the potential for physical confrontation."
+  },
+  {
+    category: "Conflict De-escalation",
+    question: "As a concealed carry holder, why are you held to a higher standard regarding conflict avoidance?",
+    options: [
+      "Because your license can be revoked for aggressive behavior",
+      "Because every confrontation you're involved in is one that includes a firearm, raising the stakes significantly",
+      "Because the police will always blame the armed person",
+      "Because you are legally required to retreat in all situations"
+    ],
+    answer: 1,
+    explanation: "When you carry a firearm, every altercation you're involved in has a gun present — yours. This reality means any confrontation could escalate to a lethal encounter, so you bear a heightened responsibility to avoid and de-escalate."
+  },
+
+  // ===== ALCOHOL AND DRUG EFFECTS =====
+  {
+    category: "Alcohol & Drug Effects",
+    question: "Is it legal to carry a concealed firearm while under the influence of alcohol in New York?",
+    options: [
+      "Yes, as long as you are below the legal driving limit",
+      "Yes, if you are on private property",
+      "No, carrying while intoxicated is prohibited and dangerous",
+      "Yes, as long as the firearm is holstered"
+    ],
+    answer: 2,
+    explanation: "Carrying a firearm while intoxicated is prohibited. Alcohol impairs judgment, reaction time, motor skills, and decision-making — all critical faculties for safe firearm handling."
+  },
+  {
+    category: "Alcohol & Drug Effects",
+    question: "How does alcohol affect the skills needed for safe firearm use?",
+    options: [
+      "It only affects aim, not judgment",
+      "It impairs judgment, reaction time, coordination, and decision-making",
+      "Small amounts actually improve steadiness",
+      "It only becomes a problem above the legal driving limit"
+    ],
+    answer: 1,
+    explanation: "Alcohol impairs all faculties critical to safe firearm use: judgment (knowing when force is justified), reaction time, fine motor coordination (trigger control, aiming), and decision-making. Any amount of impairment is dangerous."
+  },
+  {
+    category: "Alcohol & Drug Effects",
+    question: "Which of the following statements about prescription medications and carrying a firearm is TRUE?",
+    options: [
+      "Prescription medications never affect your ability to carry safely",
+      "Some prescription medications can impair judgment and motor skills, and you should not carry if impaired",
+      "Only illegal drugs affect your ability to carry",
+      "A doctor's prescription overrides any restrictions on carrying while medicated"
+    ],
+    answer: 1,
+    explanation: "Many prescription medications (opioids, benzodiazepines, certain antihistamines, sleep aids, etc.) can impair judgment, coordination, and reaction time. If a medication causes impairment, you should not carry or handle firearms."
+  },
+  {
+    category: "Alcohol & Drug Effects",
+    question: "If you plan to consume alcohol at a social event, what should you do with your concealed firearm?",
+    options: [
+      "Carry it but promise yourself not to draw it",
+      "Leave it secured at home or in a safe storage depository before the event",
+      "Give it to a friend to hold",
+      "Keep it in your vehicle's glove compartment"
+    ],
+    answer: 1,
+    explanation: "If you plan to consume alcohol, you should leave your firearm secured at home in a safe storage depository before attending the event. Willpower is not a reliable safety mechanism when alcohol is involved."
+  },
+  {
+    category: "Alcohol & Drug Effects",
+    question: "Using marijuana and possessing a firearm is:",
+    options: [
+      "Legal in New York since marijuana has been decriminalized",
+      "Legal as long as you have a medical marijuana card",
+      "A violation of federal law regardless of state marijuana laws",
+      "Only illegal if you are caught using both simultaneously"
+    ],
+    answer: 2,
+    explanation: "Regardless of state marijuana legalization, federal law (18 U.S.C. §922(g)(3)) prohibits firearm possession by unlawful users of controlled substances. Marijuana remains a Schedule I controlled substance under federal law."
+  },
+
+  // ===== LAW ENFORCEMENT ENCOUNTERS =====
+  {
+    category: "Law Enforcement Encounters",
+    question: "When stopped by law enforcement while carrying concealed, what should you do?",
+    options: [
+      "Immediately reach for your wallet to show your license",
+      "Inform the officer that you have a concealed carry permit and are currently armed, keep your hands visible",
+      "Wait for the officer to ask before mentioning your firearm",
+      "Step out of the vehicle to make the interaction easier"
+    ],
+    answer: 1,
+    explanation: "Best practice is to promptly inform the officer that you have a concealed carry permit and that you are armed. Keep your hands visible (on the steering wheel if in a vehicle) and follow the officer's instructions."
+  },
+  {
+    category: "Law Enforcement Encounters",
+    question: "During a traffic stop, where should your hands be when the officer approaches?",
+    options: [
+      "In your lap",
+      "Reaching for your registration and insurance",
+      "On the steering wheel where they are clearly visible",
+      "Opening your door to step out"
+    ],
+    answer: 2,
+    explanation: "Keep your hands on the steering wheel where the officer can see them. Do not reach for anything — your license, registration, or firearm — until the officer instructs you to do so."
+  },
+  {
+    category: "Law Enforcement Encounters",
+    question: "If an officer asks you to surrender your firearm during a traffic stop, you should:",
+    options: [
+      "Refuse, as it violates your Second Amendment rights",
+      "Comply with the officer's instructions calmly and safely",
+      "Argue that you have a valid permit",
+      "Ask to speak with a supervisor first"
+    ],
+    answer: 1,
+    explanation: "If an officer requests your firearm, comply calmly and follow their specific instructions on how to make the firearm safe and hand it over. Any legal objections can be raised later through proper channels."
+  },
+  {
+    category: "Law Enforcement Encounters",
+    question: "What should you NEVER do during a law enforcement encounter while armed?",
+    options: [
+      "Speak to the officer",
+      "Make sudden movements or reach toward your firearm without the officer's direction",
+      "Provide your identification",
+      "Stay in your vehicle"
+    ],
+    answer: 1,
+    explanation: "Never make sudden movements or reach toward your firearm during a law enforcement encounter. Officers are trained to respond to perceived threats, and reaching for a weapon area can be misinterpreted as a threat."
+  },
+  {
+    category: "Law Enforcement Encounters",
+    question: "After a self-defense incident, when law enforcement arrives, you should:",
+    options: [
+      "Provide a full detailed statement immediately",
+      "Holster or make safe your firearm, comply with all instructions, state that you were in fear for your life, and request an attorney before making detailed statements",
+      "Refuse to speak to officers entirely",
+      "Leave the scene and contact your lawyer first"
+    ],
+    answer: 1,
+    explanation: "After a self-defense incident, secure your firearm, comply with officers, and identify yourself. State briefly that you were attacked and in fear for your life. Request an attorney before providing detailed statements, as your exact words matter greatly in these situations."
+  },
+
+  // ===== SENSITIVE AND RESTRICTED PLACES =====
+  {
+    category: "Sensitive & Restricted Places",
+    question: "Under NY Penal Law §265.01-e, carrying a firearm in a 'sensitive location' is classified as:",
+    options: [
+      "A violation",
+      "A Class A misdemeanor",
+      "A Class E felony",
+      "A Class D felony"
+    ],
+    answer: 2,
+    explanation: "Possessing a firearm in a sensitive location under §265.01-e is a Class E felony in New York, carrying significant criminal penalties even for licensed concealed carry holders."
+  },
+  {
+    category: "Sensitive & Restricted Places",
+    question: "Which of the following is a 'sensitive location' where concealed carry is prohibited?",
+    options: [
+      "A private office building",
+      "A public park",
+      "A restaurant that does not serve alcohol",
+      "A private residence with the owner's permission"
+    ],
+    answer: 1,
+    explanation: "Public parks are designated as sensitive locations under NY Penal Law §265.01-e. Other sensitive locations include government buildings, schools, healthcare facilities, houses of worship, libraries, playgrounds, and public transportation."
+  },
+  {
+    category: "Sensitive & Restricted Places",
+    question: "Can you legally carry a concealed firearm on the New York City subway?",
+    options: [
+      "Yes, with a valid concealed carry permit",
+      "Yes, but only during off-peak hours",
+      "No, all public transportation is a sensitive location",
+      "Yes, as long as the firearm is unloaded"
+    ],
+    answer: 2,
+    explanation: "All public transportation — including subways, buses, trains, ferries, airports, and train stations — are designated as sensitive locations where firearms are prohibited regardless of your license status."
+  },
+  {
+    category: "Sensitive & Restricted Places",
+    question: "Which of the following is also designated as a sensitive location under New York law?",
+    options: [
+      "Gas stations",
+      "Private parking lots",
+      "Places of worship (churches, synagogues, mosques, etc.)",
+      "Grocery stores"
+    ],
+    answer: 2,
+    explanation: "Places of worship are designated as sensitive locations. An exception exists for authorized security personnel specifically assigned to provide security at the worship location."
+  },
+  {
+    category: "Sensitive & Restricted Places",
+    question: "Are healthcare facilities included in New York's sensitive locations list?",
+    options: [
+      "No, only hospitals are restricted",
+      "Yes — facilities for physical health, behavioral health, and chemical dependence care are all sensitive locations",
+      "Only emergency rooms are restricted",
+      "Healthcare facilities are restricted only in New York City"
+    ],
+    answer: 1,
+    explanation: "Healthcare facilities providing physical health, behavioral health, and chemical dependence care are all designated as sensitive locations where concealed carry is prohibited under §265.01-e."
+  },
+  {
+    category: "Sensitive & Restricted Places",
+    question: "You have a valid NY concealed carry permit. Can you carry in a public library?",
+    options: [
+      "Yes, a library is not a government building",
+      "Yes, as long as you keep it concealed",
+      "No, libraries are designated sensitive locations",
+      "Only if the library permits it"
+    ],
+    answer: 2,
+    explanation: "Public libraries are specifically listed as sensitive locations under NY Penal Law §265.01-e. Your concealed carry permit does not override this restriction."
+  },
+
+  // ===== CONFLICT MANAGEMENT =====
+  {
+    category: "Conflict Management",
+    question: "What is the primary goal of conflict management for a concealed carry holder?",
+    options: [
+      "Winning the confrontation",
+      "Preventing the situation from escalating to the point where force might be needed",
+      "Establishing dominance to deter future conflicts",
+      "Documenting the incident for legal purposes"
+    ],
+    answer: 1,
+    explanation: "The primary goal is preventing escalation. A concealed carry holder should use conflict management skills to resolve situations peacefully, reserving the use of force only as an absolute last resort."
+  },
+  {
+    category: "Conflict Management",
+    question: "In a verbal confrontation, what is the concept of 'tactical retreat'?",
+    options: [
+      "A sign of weakness that should be avoided",
+      "Strategically removing yourself from a potentially dangerous situation to ensure safety",
+      "Running away from every confrontation",
+      "Backing up while keeping your hand on your firearm"
+    ],
+    answer: 1,
+    explanation: "A tactical retreat is the strategic decision to remove yourself from a dangerous situation. It is a sign of good judgment, not weakness, and is often the best possible outcome for everyone involved."
+  },
+  {
+    category: "Conflict Management",
+    question: "Which scenario BEST demonstrates proper conflict management?",
+    options: [
+      "A man bumps into you aggressively; you place your hand on your concealed firearm as a warning",
+      "Someone cuts you off in traffic; you follow them to get their license plate",
+      "A stranger becomes verbally aggressive toward you; you calmly create distance, avoid engaging, and leave the area",
+      "A person in a parking lot is acting suspiciously; you approach them to ask what they are doing"
+    ],
+    answer: 2,
+    explanation: "Creating distance, refusing to engage with verbal aggression, and leaving the area is the textbook response. It eliminates the potential for escalation and removes you from danger without force."
+  },
+  {
+    category: "Conflict Management",
+    question: "Why should a concealed carry holder avoid arguments, even when they are in the right?",
+    options: [
+      "Arguments are always illegal",
+      "Because arguments can unexpectedly escalate, and the presence of a firearm raises the potential consequences enormously",
+      "Because the other person might also be armed",
+      "Because it takes too much time"
+    ],
+    answer: 1,
+    explanation: "Arguments can escalate unpredictably. When you are carrying a firearm, an escalation can turn a verbal disagreement into a potentially lethal encounter. The stakes are simply too high to engage in confrontations."
+  },
+  {
+    category: "Conflict Management",
+    question: "What role does ego play in conflict management for a concealed carry holder?",
+    options: [
+      "A healthy ego helps maintain confidence in confrontations",
+      "Ego must be set aside — being right is less important than being safe and avoiding deadly force",
+      "Ego is irrelevant to conflict management",
+      "A strong ego deters potential aggressors"
+    ],
+    answer: 1,
+    explanation: "Ego is one of the most dangerous factors in conflict escalation. A concealed carry holder must be willing to walk away, even when provoked or insulted, because no verbal slight is worth a lethal confrontation."
+  },
+
+  // ===== USE OF DEADLY PHYSICAL FORCE =====
+  {
+    category: "Use of Deadly Physical Force",
+    question: "Under New York Penal Law §35.15, when may a person use deadly physical force in self-defense?",
+    options: [
+      "Whenever they feel uncomfortable or threatened",
+      "When they reasonably believe another person is using or about to use deadly physical force against them",
+      "When their property is being stolen",
+      "When they are insulted or verbally threatened"
+    ],
+    answer: 1,
+    explanation: "Under §35.15, deadly physical force is only justified when a person reasonably believes another is using or is about to use deadly physical force. Verbal threats, insults, or property crimes alone do not justify deadly force."
+  },
+  {
+    category: "Use of Deadly Physical Force",
+    question: "What is the 'Castle Doctrine' as it applies in New York?",
+    options: [
+      "You can use deadly force to protect any building you own",
+      "You have no duty to retreat when you are in your own dwelling and are not the initial aggressor",
+      "Your home is exempt from all firearm laws",
+      "You can set lethal traps in your home for intruders"
+    ],
+    answer: 1,
+    explanation: "New York's Castle Doctrine provides that you have no duty to retreat when you are in your own dwelling (home) and you are not the initial aggressor. However, you must still reasonably believe deadly force is necessary."
+  },
+  {
+    category: "Use of Deadly Physical Force",
+    question: "Besides self-defense against deadly force, New York law also permits deadly force to prevent which of the following crimes?",
+    options: [
+      "Shoplifting and pickpocketing",
+      "Kidnapping, forcible rape, and forcible criminal sexual act",
+      "Vandalism and trespassing",
+      "Any felony committed in your presence"
+    ],
+    answer: 1,
+    explanation: "New York law permits the use of deadly physical force to prevent kidnapping, forcible rape, forcible criminal sexual act, and robbery — crimes that inherently threaten death or serious physical injury."
+  },
+  {
+    category: "Use of Deadly Physical Force",
+    question: "What does 'reasonable belief' mean in the context of using deadly force?",
+    options: [
+      "You personally felt afraid, regardless of the actual circumstances",
+      "A reasonable person in the same situation, knowing what you knew, would also believe deadly force was necessary",
+      "You had any reason at all to believe force was needed",
+      "An expert later determined the threat was real"
+    ],
+    answer: 1,
+    explanation: "Reasonable belief is an objective standard: would a reasonable person in your circumstances, with the same knowledge, also believe deadly force was necessary? It is not based solely on personal feelings or hindsight analysis."
+  },
+  {
+    category: "Use of Deadly Physical Force",
+    question: "Can you use deadly force to protect your personal property (e.g., a stolen wallet) in New York?",
+    options: [
+      "Yes, all property owners have the right to defend their property with any force necessary",
+      "Yes, but only if the property is worth over $1,000",
+      "No, deadly force is not justified solely to protect personal property",
+      "Yes, as long as you warn the thief first"
+    ],
+    answer: 2,
+    explanation: "Deadly force is never justified solely to protect personal property in New York. Deadly force is reserved for situations involving an imminent threat of death or serious physical injury to a person."
+  },
+  {
+    category: "Use of Deadly Physical Force",
+    question: "If you are the initial aggressor in a confrontation, can you later claim self-defense?",
+    options: [
+      "Yes, you always have the right to self-defense",
+      "Generally no, unless you have withdrawn from the encounter and effectively communicated that withdrawal",
+      "Yes, if the other person escalates beyond your initial aggression",
+      "No, the initial aggressor can never claim self-defense under any circumstances"
+    ],
+    answer: 1,
+    explanation: "Generally, the initial aggressor cannot claim self-defense. However, if you have clearly withdrawn from the encounter and effectively communicated your withdrawal (and the other person continues to attack), you may regain the right to self-defense."
+  },
+  {
+    category: "Use of Deadly Physical Force",
+    question: "What is 'proportional force'?",
+    options: [
+      "Using the exact same weapon your attacker uses",
+      "Responding with a level of force that is reasonably related to the threat you face",
+      "Always using the minimum possible force",
+      "Matching your attacker blow for blow"
+    ],
+    answer: 1,
+    explanation: "Proportional force means your response must be reasonably related to the threat. You cannot respond to a shove with deadly force. The level of force used must correspond to the severity and immediacy of the threat."
+  },
+  {
+    category: "Use of Deadly Physical Force",
+    question: "After using deadly force in self-defense, you should:",
+    options: [
+      "Leave the scene immediately to avoid arrest",
+      "Rearrange the scene to better support your self-defense claim",
+      "Call 911 immediately, render aid if safe to do so, and remain at the scene",
+      "Post about the incident on social media to get witnesses"
+    ],
+    answer: 2,
+    explanation: "After a self-defense incident, call 911 immediately, provide first aid if it is safe, and remain at the scene. Do not alter the scene, and request an attorney before making detailed statements to police."
+  },
+
+  // ===== ADDITIONAL MIXED TOPICS =====
+  {
+    category: "State & Federal Gun Laws",
+    question: "Is a New York State concealed carry license valid in New York City?",
+    options: [
+      "Yes, it is valid statewide including NYC",
+      "No, NYC does not recognize any state-issued carry permits",
+      "Only for transportation purposes under specific conditions",
+      "Yes, but only in certain boroughs"
+    ],
+    answer: 0,
+    explanation: "A New York State concealed carry license is generally valid throughout the state, including New York City, though NYC has additional regulations and restrictions that apply."
+  },
+  {
+    category: "General Firearm Safety",
+    question: "What is a 'negligent discharge'?",
+    options: [
+      "A firearm that fails to fire",
+      "An unintentional firing of a firearm due to the handler's failure to follow safety rules",
+      "A discharge at a firing range",
+      "A firearm malfunction causing an unexpected discharge"
+    ],
+    answer: 1,
+    explanation: "A negligent discharge occurs when a firearm fires unintentionally due to the handler's carelessness — such as failing to keep the finger off the trigger or pointing the muzzle in an unsafe direction. It is preventable by following the fundamental safety rules."
+  },
+  {
+    category: "Situational Awareness",
+    question: "The awareness color code system uses which color to indicate a relaxed but alert state?",
+    options: [
+      "White (unaware)",
+      "Yellow (relaxed alert)",
+      "Orange (heightened alert)",
+      "Red (imminent threat)"
+    ],
+    answer: 1,
+    explanation: "Condition Yellow represents a relaxed but alert state — you are aware of your surroundings without being paranoid. This is the baseline awareness level recommended for anyone carrying a concealed firearm in public."
+  },
+  {
+    category: "Safe Storage Requirements",
+    question: "Who is EXEMPT from New York's safe storage requirements?",
+    options: [
+      "Retired military personnel",
+      "Licensed security guards",
+      "Active police officers, qualified law enforcement under 18 U.S.C. §926B, and military personnel in official capacity",
+      "Anyone with a concealed carry permit"
+    ],
+    answer: 2,
+    explanation: "Exemptions to the safe storage requirements apply to police officers, qualified law enforcement officers authorized under federal law (18 U.S.C. §926B), and military personnel acting in their official capacity."
+  },
+  {
+    category: "Conflict De-escalation",
+    question: "Which response demonstrates the WORST judgment for a concealed carry holder?",
+    options: [
+      "Walking away from a heated argument",
+      "Calling the police when feeling threatened",
+      "Lifting your shirt to show your firearm to end an argument",
+      "Driving away from an aggressive driver"
+    ],
+    answer: 2,
+    explanation: "Exposing your concealed firearm to intimidate or end an argument is brandishing — it is potentially criminal (menacing), can escalate the situation dramatically, and demonstrates exactly the kind of poor judgment that could result in loss of your carry license."
+  },
+  {
+    category: "Sensitive & Restricted Places",
+    question: "Educational institutions under the sensitive locations law include:",
+    options: [
+      "Only public K-12 schools",
+      "Only colleges and universities",
+      "All schools, colleges, universities, charter schools, and private schools",
+      "Only schools that receive federal funding"
+    ],
+    answer: 2,
+    explanation: "The sensitive locations law covers all educational institutions: public and private K-12 schools, charter schools, colleges, and universities. No educational institution is exempt from this restriction."
+  },
+  {
+    category: "Use of Deadly Physical Force",
+    question: "The legal concept of 'imminent threat' means:",
+    options: [
+      "A threat that might happen sometime in the future",
+      "A threat that is immediately about to occur — the danger is present and immediate",
+      "Any threat that has been communicated verbally",
+      "A threat that occurred in the past and might recur"
+    ],
+    answer: 1,
+    explanation: "Imminence means the threat is happening right now or is immediately about to happen. Past threats, future threats, or speculative threats do not meet the imminence standard required to justify the use of deadly force."
+  },
+  {
+    category: "Law Enforcement Encounters",
+    question: "If you are involved in a defensive shooting, why is it important to request an attorney?",
+    options: [
+      "To help you create a story",
+      "Because anything you say can be used against you, and stress can cause you to make inaccurate statements",
+      "Because attorneys can make evidence disappear",
+      "It is not important — you should fully cooperate immediately"
+    ],
+    answer: 1,
+    explanation: "After a critical incident, stress, adrenaline, and trauma can impair your memory and cause you to make inaccurate or poorly worded statements. An attorney ensures your rights are protected and your statements are accurate and properly framed."
+  }
+];
+
+let examQuestions = [];
+let currentIndex = 0;
+let answers = {};
+let revealed = {};
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function startExam() {
+  const count = parseInt(document.getElementById('q-count').value, 10);
+  examQuestions = shuffle(QUESTIONS).slice(0, count);
+  currentIndex = 0;
+  answers = {};
+  revealed = {};
+
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('exam').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  renderQuestion();
+}
+
+function renderQuestion() {
+  const q = examQuestions[currentIndex];
+  const total = examQuestions.length;
+
+  document.getElementById('progress-fill').style.width =
+    ((currentIndex + 1) / total * 100) + '%';
+  document.getElementById('progress-text').textContent =
+    `Question ${currentIndex + 1} of ${total}`;
+
+  const answered = Object.keys(answers).length;
+  const correct = Object.values(answers).filter(a => a.correct).length;
+  document.getElementById('score-live').textContent =
+    answered ? `${correct}/${answered} correct` : '';
+
+  document.getElementById('q-category').textContent = q.category;
+  document.getElementById('q-text').textContent = q.question;
+
+  const optionsDiv = document.getElementById('q-options');
+  optionsDiv.innerHTML = '';
+
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.textContent = opt;
+
+    if (revealed[currentIndex]) {
+      btn.classList.add('locked');
+      if (i === q.answer) btn.classList.add('correct');
+      if (answers[currentIndex] && answers[currentIndex].selected === i && i !== q.answer) {
+        btn.classList.add('incorrect');
+      }
+    } else if (answers[currentIndex] && answers[currentIndex].selected === i) {
+      btn.classList.add('selected');
+    }
+
+    btn.addEventListener('click', () => selectOption(i));
+    optionsDiv.appendChild(btn);
+  });
+
+  const expl = document.getElementById('q-explanation');
+  expl.textContent = q.explanation;
+  expl.classList.toggle('visible', !!revealed[currentIndex]);
+
+  document.getElementById('btn-prev').style.visibility =
+    currentIndex === 0 ? 'hidden' : 'visible';
+
+  const nextBtn = document.getElementById('btn-next');
+  if (currentIndex === total - 1 && Object.keys(answers).length === total) {
+    nextBtn.textContent = 'See Results';
+  } else {
+    nextBtn.textContent = 'Next →';
+  }
+}
+
+function selectOption(i) {
+  if (revealed[currentIndex]) return;
+
+  const q = examQuestions[currentIndex];
+  answers[currentIndex] = { selected: i, correct: i === q.answer };
+  revealed[currentIndex] = true;
+  renderQuestion();
+}
+
+function nextQuestion() {
+  if (currentIndex === examQuestions.length - 1 &&
+      Object.keys(answers).length === examQuestions.length) {
+    showResults();
+    return;
+  }
+  if (currentIndex < examQuestions.length - 1) {
+    currentIndex++;
+    renderQuestion();
+    document.querySelector('.progress-bar').scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+function prevQuestion() {
+  if (currentIndex > 0) {
+    currentIndex--;
+    renderQuestion();
+    document.querySelector('.progress-bar').scrollIntoView({ behavior: 'smooth' });
+  }
+}
+
+function showResults() {
+  document.getElementById('exam').style.display = 'none';
+  document.getElementById('results').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+
+  const total = examQuestions.length;
+  const correct = Object.values(answers).filter(a => a.correct).length;
+  const pct = Math.round(correct / total * 100);
+  const pass = pct >= 80;
+
+  document.getElementById('score-pct').textContent = pct + '%';
+  document.getElementById('score-of').textContent = `${correct} / ${total}`;
+
+  const ring = document.getElementById('ring-fill');
+  const circumference = 2 * Math.PI * 88;
+  ring.style.strokeDasharray = circumference;
+  ring.style.strokeDashoffset = circumference;
+  ring.classList.remove('pass', 'fail');
+  ring.classList.add(pass ? 'pass' : 'fail');
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      ring.style.strokeDashoffset = circumference - (pct / 100) * circumference;
+    });
+  });
+
+  const badge = document.getElementById('result-badge');
+  badge.className = 'result-badge ' + (pass ? 'pass' : 'fail');
+  badge.textContent = pass ? 'PASSED' : 'NOT YET PASSING';
+
+  // Category breakdown
+  const catStats = {};
+  examQuestions.forEach((q, idx) => {
+    if (!catStats[q.category]) catStats[q.category] = { correct: 0, total: 0 };
+    catStats[q.category].total++;
+    if (answers[idx] && answers[idx].correct) catStats[q.category].correct++;
+  });
+
+  const breakdownDiv = document.getElementById('breakdown');
+  breakdownDiv.innerHTML = '<h3>Score by Category</h3>';
+  Object.entries(catStats).sort((a, b) => a[0].localeCompare(b[0])).forEach(([cat, s]) => {
+    const catPct = Math.round(s.correct / s.total * 100);
+    const row = document.createElement('div');
+    row.className = 'breakdown-row';
+    row.innerHTML = `
+      <span>${cat}</span>
+      <span class="breakdown-score ${catPct >= 80 ? 'good' : 'bad'}">${s.correct}/${s.total} (${catPct}%)</span>
+    `;
+    breakdownDiv.appendChild(row);
+  });
+
+  // Missed questions review
+  const reviewList = document.getElementById('review-list');
+  reviewList.innerHTML = '';
+  let hasMissed = false;
+
+  examQuestions.forEach((q, idx) => {
+    if (answers[idx] && !answers[idx].correct) {
+      hasMissed = true;
+      const card = document.createElement('div');
+      card.className = 'review-card';
+      card.innerHTML = `
+        <div class="question-category">${q.category}</div>
+        <div class="question-text" style="font-size:1rem; margin-bottom:10px;">${q.question}</div>
+        <div class="review-answer wrong">Your answer: ${q.options[answers[idx].selected]}</div>
+        <div class="review-answer right">Correct answer: ${q.options[q.answer]}</div>
+        <div class="explanation visible" style="margin-top:12px;">${q.explanation}</div>
+      `;
+      reviewList.appendChild(card);
+    }
+  });
+
+  document.getElementById('review-section').style.display = hasMissed ? 'block' : 'none';
+}
+
+function goHome() {
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('exam').style.display = 'none';
+  document.getElementById('landing').style.display = 'block';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.getElementById('q-count').addEventListener('change', function() {
+  document.getElementById('q-count-display').textContent = this.value;
+});
+</script>
+</body>
+</html>
