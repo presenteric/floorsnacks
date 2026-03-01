@@ -1,4 +1,4 @@
-const CACHE_NAME = 'ccw-prep-v2';
+const CACHE_NAME = 'ccw-prep-v3';
 const ASSETS = ['/', '/index.html'];
 
 self.addEventListener('install', e => {
