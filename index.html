@@ -465,6 +465,85 @@
       line-height: 1.5;
     }
 
+    .flag-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-dim);
+      font-size: 0.82rem;
+      padding: 6px 12px;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+
+    .flag-btn:hover { border-color: var(--warning); color: var(--warning); }
+    .flag-btn.flagged { border-color: var(--warning); color: var(--warning); background: rgba(245, 158, 11, 0.1); }
+
+    .flagged-panel {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-top: 24px;
+      text-align: left;
+    }
+
+    .flagged-panel h2 {
+      font-size: 1rem;
+      color: var(--warning);
+      margin-bottom: 4px;
+    }
+
+    .flagged-panel .subtext {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-bottom: 16px;
+    }
+
+    .flagged-item {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .flagged-item:last-child { border-bottom: none; }
+
+    .flagged-item .q-text { font-size: 0.95rem; margin-bottom: 6px; }
+    .flagged-item .q-meta { font-size: 0.8rem; color: var(--text-dim); }
+    .flagged-item .q-answer { font-size: 0.85rem; color: var(--success); margin-top: 4px; }
+
+    .flagged-item .unflag-btn {
+      background: none;
+      border: none;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      cursor: pointer;
+      padding: 4px 0;
+      margin-top: 4px;
+    }
+
+    .flagged-item .unflag-btn:hover { color: var(--danger); }
+
+    .flagged-count-badge {
+      display: inline-block;
+      background: var(--warning);
+      color: var(--bg);
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 99px;
+      margin-left: 6px;
+    }
+
+    .flag-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
     .btn-exit {
       background: transparent;
       color: var(--text-dim);
@@ -595,6 +674,13 @@
     <div class="btn-group">
       <button class="btn btn-primary" onclick="startExam()">Start Practice Exam</button>
     </div>
+
+    <div class="flagged-panel" id="flagged-panel" style="display:none">
+      <h2>⚑ Flagged Questions <span class="flagged-count-badge" id="flagged-count">0</span></h2>
+      <p class="subtext">Questions you've flagged for review — check if answers seem wrong</p>
+      <div id="flagged-list"></div>
+      <button class="btn btn-outline btn-sm" style="margin-top:16px" onclick="clearAllFlags()">Clear All Flags</button>
+    </div>
   </section>
 
   <!-- ==================== EXAM ==================== -->
@@ -613,7 +699,10 @@
     </div>
 
     <div class="question-card" id="question-card">
-      <div class="question-category" id="q-category"></div>
+      <div class="flag-row">
+        <div class="question-category" id="q-category"></div>
+        <button class="flag-btn" id="flag-btn" onclick="toggleFlag()">⚑ Flag</button>
+      </div>
       <div class="question-text" id="q-text"></div>
       <img class="question-image" id="q-image" src="" alt="" style="display:none" />
       <div class="options" id="q-options"></div>
@@ -2737,6 +2826,93 @@ function restoreState() {
   } catch (_) { return false; }
 }
 
+function getFlags() {
+  try {
+    return JSON.parse(localStorage.getItem('ccw_flags') || '{}');
+  } catch (_) { return {}; }
+}
+
+function saveFlags(flags) {
+  try { localStorage.setItem('ccw_flags', JSON.stringify(flags)); } catch (_) {}
+}
+
+function questionKey(q) {
+  return q.question.slice(0, 80);
+}
+
+function toggleFlag() {
+  const q = examQuestions[currentIndex];
+  const key = questionKey(q);
+  const flags = getFlags();
+  if (flags[key]) {
+    delete flags[key];
+  } else {
+    flags[key] = {
+      question: q.question,
+      category: q.category,
+      options: q.options,
+      answer: q.answer,
+      explanation: q.explanation,
+      flaggedAt: new Date().toISOString()
+    };
+  }
+  saveFlags(flags);
+  updateFlagBtn();
+}
+
+function updateFlagBtn() {
+  const q = examQuestions[currentIndex];
+  const flags = getFlags();
+  const btn = document.getElementById('flag-btn');
+  const isFlagged = !!flags[questionKey(q)];
+  btn.classList.toggle('flagged', isFlagged);
+  btn.textContent = isFlagged ? '⚑ Flagged' : '⚑ Flag';
+}
+
+function renderFlaggedPanel() {
+  const flags = getFlags();
+  const keys = Object.keys(flags);
+  const panel = document.getElementById('flagged-panel');
+  const list = document.getElementById('flagged-list');
+  const badge = document.getElementById('flagged-count');
+
+  if (keys.length === 0) {
+    panel.style.display = 'none';
+    return;
+  }
+
+  panel.style.display = 'block';
+  badge.textContent = keys.length;
+  list.innerHTML = '';
+
+  keys.forEach(key => {
+    const f = flags[key];
+    const item = document.createElement('div');
+    item.className = 'flagged-item';
+    item.innerHTML = `
+      <div class="q-meta">${f.category} · flagged ${new Date(f.flaggedAt).toLocaleDateString()}</div>
+      <div class="q-text">${f.question}</div>
+      <div class="q-answer">Answer: ${f.options[f.answer]}</div>
+      <div class="q-meta" style="margin-top:4px;color:var(--text-dim)">${f.explanation || ''}</div>
+      <button class="unflag-btn" onclick="unflag('${key.replace(/'/g, "\\'")}')">Remove flag</button>
+    `;
+    list.appendChild(item);
+  });
+}
+
+function unflag(key) {
+  const flags = getFlags();
+  delete flags[key];
+  saveFlags(flags);
+  renderFlaggedPanel();
+}
+
+function clearAllFlags() {
+  if (!confirm('Remove all flags?')) return;
+  saveFlags({});
+  renderFlaggedPanel();
+}
+
 function shuffle(arr) {
   const a = [...arr];
   for (let i = a.length - 1; i > 0; i--) {
@@ -2844,6 +3020,8 @@ function renderQuestion() {
   const expl = document.getElementById('q-explanation');
   expl.textContent = q.explanation;
   expl.classList.toggle('visible', !!revealed[currentIndex]);
+
+  updateFlagBtn();
 
   document.getElementById('btn-prev').style.visibility =
     currentIndex === 0 ? 'hidden' : 'visible';
@@ -2973,6 +3151,7 @@ function goHome() {
   document.getElementById('results').style.display = 'none';
   document.getElementById('exam').style.display = 'none';
   document.getElementById('landing').style.display = 'block';
+  renderFlaggedPanel();
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
@@ -2984,6 +3163,8 @@ document.getElementById('q-count').addEventListener('change', function() {
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
+
+renderFlaggedPanel();
 
 (function resumeCheck() {
   if (restoreState()) {
