@@ -679,7 +679,11 @@
       <h2>⚑ Flagged Questions <span class="flagged-count-badge" id="flagged-count">0</span></h2>
       <p class="subtext">Questions you've flagged for review — check if answers seem wrong</p>
       <div id="flagged-list"></div>
-      <button class="btn btn-outline btn-sm" style="margin-top:16px" onclick="clearAllFlags()">Clear All Flags</button>
+      <div style="display:flex;gap:10px;margin-top:16px;flex-wrap:wrap">
+        <button class="btn btn-primary btn-sm" onclick="submitFlags()">Submit for Review</button>
+        <button class="btn btn-outline btn-sm" onclick="clearAllFlags()">Clear All Flags</button>
+      </div>
+      <div id="submit-status" style="font-size:0.85rem;margin-top:10px;color:var(--text-dim)"></div>
     </div>
   </section>
 
@@ -2911,6 +2915,47 @@ function clearAllFlags() {
   if (!confirm('Remove all flags?')) return;
   saveFlags({});
   renderFlaggedPanel();
+}
+
+function submitFlags() {
+  const flags = getFlags();
+  const keys = Object.keys(flags);
+  if (keys.length === 0) return;
+
+  const status = document.getElementById('submit-status');
+  status.textContent = 'Submitting...';
+
+  let body = `**${keys.length} flagged question(s)** submitted ${new Date().toLocaleString()}\n\n`;
+  keys.forEach((key, i) => {
+    const f = flags[key];
+    body += `---\n**${i + 1}. [${f.category}]** ${f.question}\n`;
+    f.options.forEach((opt, j) => {
+      body += `${j === f.answer ? '  ✅' : '  ⬜'} ${opt}\n`;
+    });
+    if (f.explanation) body += `> _${f.explanation}_\n`;
+    body += '\n';
+  });
+
+  const ntfyBody = keys.map((key, i) => {
+    const f = flags[key];
+    return `${i + 1}. [${f.category}] ${f.question} → Answer: ${f.options[f.answer]}`;
+  }).join('\n');
+
+  fetch('https://ntfy.sh/floorsnacks-ccw-flags', {
+    method: 'POST',
+    headers: { 'Title': keys.length + ' question(s) flagged for review', 'Priority': '3', 'Tags': 'triangular_flag_on_post' },
+    body: ntfyBody
+  }).then(resp => {
+    if (resp.ok) {
+      status.textContent = '✓ Submitted for review!';
+      status.style.color = 'var(--success)';
+    } else {
+      throw new Error();
+    }
+  }).catch(() => {
+    status.textContent = 'Could not submit — flags saved locally for now.';
+    status.style.color = 'var(--warning)';
+  });
 }
 
 function shuffle(arr) {
