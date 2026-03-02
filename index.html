@@ -2545,10 +2545,10 @@ const QUESTIONS = [
   },
   {
     category: "State & Federal Gun Laws",
-    question: "Open carry is permitted for:",
-    options: ["All of the above", "long guns", "handguns", "None of the above"],
-    answer: 1,
-    explanation: "Open carry  of long guns is permitted while hunting and possibly on one's own property. Open carry of unloaded long guns is not explicitly prohibited by any law, but is generally not practiced. It is illegal however to transport an uncased long gun in a motor vehicle, unless it is in the trunk or a compartment not accessible by anyone inside the vehicle."
+    question: "In certain circumstances in New York State, open carry is permitted for:",
+    options: ["long guns", "handguns", "All of the above", "None of the above"],
+    answer: 0,
+    explanation: "Outside NYC, open carry of unloaded long guns (rifles/shotguns) is not explicitly prohibited by state law and is permitted in contexts like hunting on appropriate land or on one's own property. However, open carry of handguns is always illegal without a permit, and even with a CCW permit open carry of handguns is not authorized. In NYC, all firearms are much more strictly regulated — you need a NYC-specific permit even to possess a long gun, and open carry of any firearm is effectively prohibited. Transporting an uncased long gun in a motor vehicle is illegal statewide unless it is unloaded and in the trunk or a compartment not accessible from inside the vehicle."
   },
   {
     category: "State & Federal Gun Laws",
@@ -3251,9 +3251,9 @@ function renderQuestion() {
   optionsDiv.innerHTML = '';
 
   if (!optionMap[currentIndex]) {
-    const indices = q.options.map((_, i) => i);
+    let indices = q.options.map((_, i) => i);
     const hasAbove = q.options.some(o => /\b(all|none) of the above\b/i.test(o));
-    if (!hasAbove) shuffle(indices);
+    if (!hasAbove) indices = shuffle(indices);
     optionMap[currentIndex] = indices;
   }
   const displayOrder = optionMap[currentIndex];
