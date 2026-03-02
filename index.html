@@ -728,7 +728,7 @@
       </div>
       <div class="stat-item">
         <span class="stat-label">Topics</span>
-        <span class="stat-value">11</span>
+        <span class="stat-value" id="active-topic-count">11</span>
       </div>
     </div>
 
@@ -3117,6 +3117,13 @@ function updateSegUI(cat) {
       btn.classList.add('active-' + catSettings[cat]);
     }
   });
+  updateTopicCount();
+}
+
+function updateTopicCount() {
+  const n = Object.values(catSettings).filter(v => v !== 'excluded').length;
+  const el = document.getElementById('active-topic-count');
+  if (el) el.textContent = n;
 }
 
 function setCatPreset(defaultVal, overrideCat, overrideVal) {
