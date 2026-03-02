@@ -3474,8 +3474,9 @@ function showResults() {
     document.getElementById('review-section').style.display = hasMissed ? 'block' : 'none';
   }
 
-  document.querySelector('[onclick="retakeIncorrect()"]').style.display =
-    (isRetake && originalExam) ? 'none' : '';
+  const retakeBtn = document.querySelector('[onclick="retakeIncorrect()"]');
+  const hasMissedAny = mergedStatus.includes('wrong');
+  retakeBtn.style.display = (!hasMissedAny || (isRetake && originalExam)) ? 'none' : '';
 }
 
 function retakeIncorrect() {
