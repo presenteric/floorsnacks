@@ -43,97 +43,75 @@
 
     header {
       text-align: center;
-      padding: 48px 0 32px;
+      padding: 32px 0 20px;
     }
 
     header h1 {
-      font-size: 2rem;
+      font-size: 1.5rem;
       font-weight: 700;
       letter-spacing: -0.02em;
-      margin-bottom: 8px;
+      margin-bottom: 4px;
     }
 
     header h1 span { color: var(--primary); }
 
     header p {
-      color: var(--text-muted);
-      font-size: 1.05rem;
+      color: var(--text-dim);
+      font-size: 0.85rem;
     }
 
     /* ---------- landing ---------- */
     #landing { text-align: center; }
 
-    .info-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 16px;
-      margin: 32px 0;
-      text-align: left;
+    .stat-bar {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      flex-wrap: wrap;
+      margin: 16px 0 12px;
+      padding: 12px 0;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
     }
 
-    .info-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 20px;
+    .stat-item {
+      display: flex;
+      align-items: baseline;
+      gap: 6px;
     }
 
-    .info-card h3 {
-      font-size: 0.8rem;
+    .stat-label {
+      font-size: 0.7rem;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: var(--text-muted);
-      margin-bottom: 6px;
+      letter-spacing: 0.06em;
+      color: var(--text-dim);
     }
 
-    .info-card p {
-      font-size: 1.15rem;
-      font-weight: 600;
-    }
-
-    .topic-list {
-      text-align: left;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px 28px;
-      margin: 24px 0;
-    }
-
-    .topic-list h2 {
-      font-size: 1.1rem;
-      margin-bottom: 14px;
-      color: var(--text-muted);
-    }
-
-    .topic-list ul {
-      list-style: none;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 8px 24px;
-    }
-
-    .topic-list li {
-      position: relative;
-      padding-left: 20px;
+    .stat-value {
       font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
     }
 
-    .topic-list li::before {
-      content: '→';
-      position: absolute;
-      left: 0;
-      color: var(--primary);
+    .stat-value select {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 2px 6px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
     }
 
     .btn {
       display: inline-flex;
       align-items: center;
       gap: 8px;
-      padding: 14px 32px;
+      padding: 12px 28px;
       border: none;
       border-radius: var(--radius);
-      font-size: 1.05rem;
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.2s;
@@ -164,52 +142,164 @@
       gap: 12px;
       justify-content: center;
       flex-wrap: wrap;
-      margin-top: 28px;
+      margin-top: 16px;
     }
 
-    /* ---------- settings modal ---------- */
-    .settings-row {
+    /* ---------- settings ---------- */
+
+    .cat-filter-panel {
+      max-width: 560px;
+      margin: 8px auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+
+    .cat-filter-panel summary {
+      padding: 10px 16px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      list-style: none;
       display: flex;
       align-items: center;
-      gap: 16px;
+      justify-content: space-between;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+
+    .cat-filter-panel summary:hover { color: var(--text); }
+
+    .cat-filter-panel summary::-webkit-details-marker { display: none; }
+
+    .cat-filter-panel summary::after {
+      content: '▸';
+      transition: transform 0.2s;
+      font-size: 0.8rem;
+    }
+
+    .cat-filter-panel[open] summary::after {
+      transform: rotate(90deg);
+    }
+
+    .cat-filter-inner {
+      padding: 0 18px 18px;
+    }
+
+    .cat-filter-panel .subtext {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      text-align: center;
+      margin-bottom: 16px;
+    }
+
+    .cat-filter-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .cat-filter-row:last-child { border-bottom: none; }
+
+    .cat-name {
+      font-size: 0.9rem;
+      color: var(--text);
+      flex: 1;
+      min-width: 0;
+    }
+
+    .cat-count {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+      margin-left: 4px;
+    }
+
+    .seg-ctrl {
+      display: flex;
+      border-radius: 8px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      flex-shrink: 0;
+    }
+
+    .seg-btn {
+      padding: 5px 6px;
+      font-size: 0.65rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      background: transparent;
+      color: var(--text-dim);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .seg-btn:not(:last-child) {
+      border-right: 1px solid var(--border);
+    }
+
+    .seg-btn:hover {
+      background: var(--surface-hover);
+      color: var(--text-muted);
+    }
+
+    .seg-btn.active-included {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .seg-btn.active-all {
+      background: var(--success);
+      color: #fff;
+    }
+
+    .seg-btn.active-excluded {
+      background: var(--danger);
+      color: #fff;
+      opacity: 0.85;
+    }
+
+    .cat-presets {
+      display: flex;
+      gap: 6px;
       justify-content: center;
-      margin: 20px 0 28px;
+      margin: 8px 0;
       flex-wrap: wrap;
     }
 
-    .settings-row label {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-    }
-
-    .settings-row select {
-      background: var(--surface);
-      color: var(--text);
+    .cat-presets button {
+      padding: 4px 12px;
+      font-size: 0.78rem;
+      border-radius: 6px;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 8px 14px;
-      font-size: 0.95rem;
-    }
-
-    .checkbox-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      justify-content: center;
-      margin: 8px 0 12px;
-    }
-
-    .checkbox-row input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--primary);
-      cursor: pointer;
-    }
-
-    .checkbox-row label {
-      font-size: 0.93rem;
+      background: transparent;
       color: var(--text-muted);
       cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .cat-presets button:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+    }
+
+    .flag-hint {
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      margin: 12px auto 0;
+      max-width: 420px;
+      line-height: 1.4;
+    }
+
+    .flag-hint span {
+      color: var(--warning, #f59e0b);
     }
 
     /* ---------- exam ---------- */
@@ -575,11 +665,13 @@
       body.exam-active header { display: none; }
       body.exam-active .container { padding-top: 8px; }
 
-      .topic-list ul { grid-template-columns: 1fr; }
       .info-grid { grid-template-columns: 1fr 1fr; }
 
-      .info-card { padding: 14px; }
-      .info-card p { font-size: 1rem; }
+      .cat-filter-row { flex-direction: column; align-items: flex-start; gap: 6px; }
+      .seg-ctrl { align-self: stretch; }
+      .seg-btn { flex: 1; padding: 6px 4px; font-size: 0.62rem; }
+
+      .stat-bar { gap: 14px; }
 
       .question-card { padding: 18px 14px; }
       .question-text { font-size: 1rem; }
@@ -594,8 +686,6 @@
       .btn-sm { padding: 10px 16px; font-size: 0.85rem; }
       .btn-exit { font-size: 0.75rem; padding: 5px 10px; }
 
-      .settings-row { flex-direction: column; gap: 8px; }
-
       .score-ring { width: 160px; height: 160px; }
       .score-pct { font-size: 2.2rem; }
       .result-badge { font-size: 0.95rem; }
@@ -606,8 +696,8 @@
     }
 
     @media (max-width: 380px) {
-      .info-grid { grid-template-columns: 1fr; }
       header h1 { font-size: 1.2rem; }
+      .stat-bar { gap: 10px; }
     }
   </style>
 </head>
@@ -620,60 +710,47 @@
 
   <!-- ==================== LANDING ==================== -->
   <section id="landing">
-    <div class="info-grid">
-      <div class="info-card">
-        <h3>Questions</h3>
-        <p id="q-count-display">50</p>
+    <div class="stat-bar">
+      <div class="stat-item">
+        <span class="stat-label">Questions</span>
+        <span class="stat-value">
+          <select id="q-count">
+            <option value="10">10</option>
+            <option value="25">25</option>
+            <option value="50" selected>50</option>
+            <option value="0">All</option>
+          </select>
+        </span>
       </div>
-      <div class="info-card">
-        <h3>Passing Score</h3>
-        <p>80%</p>
+      <div class="stat-item">
+        <span class="stat-label">Pass</span>
+        <span class="stat-value">80%</span>
       </div>
-      <div class="info-card">
-        <h3>Topics</h3>
-        <p>11 categories</p>
-      </div>
-      <div class="info-card">
-        <h3>Format</h3>
-        <p>Multiple choice</p>
+      <div class="stat-item">
+        <span class="stat-label">Topics</span>
+        <span class="stat-value">11</span>
       </div>
     </div>
 
-    <div class="topic-list">
-      <h2>Topics Covered</h2>
-      <ul>
-        <li>General Firearm Safety &amp; Mechanics</li>
-        <li>Safe Storage Requirements</li>
-        <li>State &amp; Federal Gun Laws</li>
-        <li>Situational Awareness</li>
-        <li>Conflict De-escalation</li>
-        <li>Alcohol &amp; Drug Effects</li>
-        <li>Law Enforcement Encounters</li>
-        <li>Sensitive &amp; Restricted Places</li>
-        <li>Conflict Management</li>
-        <li>Use of Deadly Physical Force</li>
-        <li>Guardian Training (988, DR BARKS, MR MRS)</li>
-      </ul>
+    <div class="cat-presets">
+      <button onclick="setCatPreset('included')">All Included</button>
+      <button onclick="setCatPreset('included','Guardian Training','all')">Guardian All</button>
+      <button onclick="setCatPreset('all')">Every Question</button>
     </div>
 
-    <div class="settings-row">
-      <label for="q-count">Number of questions:</label>
-      <select id="q-count">
-        <option value="10">10 (Quick Quiz)</option>
-        <option value="25">25 (Half Exam)</option>
-        <option value="50" selected>50 (Full Exam)</option>
-        <option value="0">All Questions</option>
-      </select>
-    </div>
-
-    <div class="checkbox-row">
-      <input type="checkbox" id="guardian-toggle" checked />
-      <label for="guardian-toggle">Always include Guardian topics (988, DR BARKS, MR MRS, Color Codes)</label>
-    </div>
+    <details class="cat-filter-panel">
+      <summary>Advanced Topic Filter</summary>
+      <div class="cat-filter-inner">
+        <p class="subtext">Off = skip · Included = at least 1 guaranteed, rest in pool · All = every question</p>
+        <div id="cat-filter-list"></div>
+      </div>
+    </details>
 
     <div class="btn-group">
       <button class="btn btn-primary" onclick="startExam()">Start Practice Exam</button>
     </div>
+
+    <p class="flag-hint">Think we got an answer or explanation wrong? <span>⚑ Flag it</span> during your exam and we'll take a closer look.</p>
 
     <div class="flagged-panel" id="flagged-panel" style="display:none">
       <h2>⚑ Flagged Questions <span class="flagged-count-badge" id="flagged-count">0</span></h2>
@@ -1934,35 +2011,35 @@ const QUESTIONS = [
       "Mental health, Responsibility, Morality, Restraint, Safety"
     ],
     answer: 1,
-    explanation: "MR MRS lists the felonies where you may use deadly physical force to prevent the ESCAPE of the perpetrator: Murder, Robbery, Manslaughter, Rape, and Sodomy."
+    explanation: "MR MRS lists the felonies where a private person may use deadly physical force to effect the arrest of someone in immediate flight (NY Penal Law §35.30(4)(b)): Murder, Robbery, Manslaughter in the first degree, Rape (forcible), and Sodomy (forcible criminal sexual act)."
   },
   {
     category: "Guardian Training",
     question: "MR MRS is a mnemonic for remembering:",
     options: [
       "The fundamental rules of marksmanship",
-      "The felonies you can use deadly physical force to prevent escape",
+      "The felonies where you can use DPF to effect the arrest of someone in immediate flight",
       "The steps to clearing a firearm malfunction",
       "The requirements for a concealed carry application"
     ],
     answer: 1,
-    explanation: "MR MRS helps you remember the felonies where deadly physical force may be used to prevent the perpetrator's ESCAPE: Murder, Robbery, Manslaughter, Rape, Sodomy."
+    explanation: "MR MRS helps you remember the felonies where a private person may use deadly physical force to effect the arrest of someone in immediate flight (§35.30(4)(b)): Murder, Robbery, Manslaughter (1st degree), Rape (forcible), Sodomy (forcible criminal sexual act)."
   },
   {
     category: "Guardian Training",
     question: "What is the key difference between DR BARKS and MR MRS?",
     options: [
       "DR BARKS is for law enforcement; MR MRS is for civilians",
-      "DR BARKS lists crimes you can use DPF to prevent or stop; MR MRS lists crimes you can use DPF to prevent ESCAPE",
+      "DR BARKS lists crimes you can use DPF to prevent or stop; MR MRS lists crimes where you can use DPF to effect arrest of someone in immediate flight",
       "DR BARKS covers misdemeanors; MR MRS covers felonies",
       "There is no difference — they are interchangeable"
     ],
     answer: 1,
-    explanation: "DR BARKS (Deadly Physical Force, Robbery, Burglary, Arson, Rape, Kidnapping, Sodomy) lists crimes you can use deadly physical force to prevent or stop (committing or attempting to commit). MR MRS (Murder, Robbery, Manslaughter, Rape, Sodomy) lists crimes you can use deadly physical force to prevent the perpetrator's ESCAPE."
+    explanation: "DR BARKS (Deadly Physical Force, Robbery, Burglary, Arson, Rape, Kidnapping, Sodomy) lists crimes you can use deadly physical force to prevent or stop (committing or attempting to commit) per §35.15. MR MRS (Murder, Robbery, Manslaughter, Rape, Sodomy) lists crimes where a private person may use DPF to effect the arrest of someone in immediate flight per §35.30(4)(b)."
   },
   {
     category: "Guardian Training",
-    question: "According to MR MRS, can you use deadly physical force to prevent the escape of someone who just committed manslaughter?",
+    question: "According to MR MRS, can you use deadly physical force to effect the arrest of someone in immediate flight who just committed manslaughter?",
     options: [
       "No, manslaughter is not serious enough",
       "Yes — Manslaughter is the second 'M' in MR MRS",
@@ -1970,7 +2047,7 @@ const QUESTIONS = [
       "Only if the person is also armed"
     ],
     answer: 1,
-    explanation: "Yes. MR MRS includes Manslaughter (the second 'M' — Murder, Robbery, Manslaughter, Rape, Sodomy). The full list of crimes where DPF may be used to prevent escape."
+    explanation: "Yes. MR MRS includes Manslaughter (the second 'M' — Murder, Robbery, Manslaughter, Rape, Sodomy). These are the crimes where a private person may use DPF to effect the arrest of someone in immediate flight (§35.30(4)(b))."
   },
   {
     category: "Guardian Training",
@@ -2967,28 +3044,139 @@ function shuffle(arr) {
   return a;
 }
 
+const catSettings = {};
+
+function getCategories() {
+  const cats = {};
+  QUESTIONS.forEach(q => {
+    cats[q.category] = (cats[q.category] || 0) + 1;
+  });
+  return cats;
+}
+
+function buildCatFilters() {
+  const cats = getCategories();
+  const list = document.getElementById('cat-filter-list');
+  list.innerHTML = '';
+  const order = [
+    'General Firearm Safety', 'Safe Storage Requirements',
+    'State & Federal Gun Laws', 'Situational Awareness',
+    'Conflict De-escalation', 'Alcohol & Drug Effects',
+    'Law Enforcement Encounters', 'Sensitive & Restricted Places',
+    'Conflict Management', 'Use of Deadly Physical Force',
+    'Guardian Training'
+  ];
+  const sorted = order.filter(c => cats[c]);
+  Object.keys(cats).forEach(c => { if (!sorted.includes(c)) sorted.push(c); });
+
+  sorted.forEach(cat => {
+    if (!catSettings[cat]) catSettings[cat] = 'included';
+    const row = document.createElement('div');
+    row.className = 'cat-filter-row';
+
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'cat-name';
+    nameSpan.textContent = cat;
+    const countSpan = document.createElement('span');
+    countSpan.className = 'cat-count';
+    countSpan.textContent = ` (${cats[cat]})`;
+    nameSpan.appendChild(countSpan);
+
+    const ctrl = document.createElement('div');
+    ctrl.className = 'seg-ctrl';
+    ctrl.dataset.cat = cat;
+
+    ['excluded', 'included', 'all'].forEach(val => {
+      const btn = document.createElement('button');
+      btn.className = 'seg-btn';
+      btn.dataset.val = val;
+      btn.textContent = {excluded:'Off', included:'Included', all:'All'}[val];
+      btn.addEventListener('click', () => setCat(cat, val));
+      ctrl.appendChild(btn);
+    });
+
+    row.appendChild(nameSpan);
+    row.appendChild(ctrl);
+    list.appendChild(row);
+    updateSegUI(cat);
+  });
+}
+
+function setCat(cat, val) {
+  catSettings[cat] = val;
+  updateSegUI(cat);
+  localStorage.setItem('ccw-cat-settings', JSON.stringify(catSettings));
+}
+
+function updateSegUI(cat) {
+  const ctrl = document.querySelector(`.seg-ctrl[data-cat="${cat}"]`);
+  if (!ctrl) return;
+  ctrl.querySelectorAll('.seg-btn').forEach(btn => {
+    btn.classList.remove('active-included', 'active-all', 'active-excluded');
+    if (btn.dataset.val === catSettings[cat]) {
+      btn.classList.add('active-' + catSettings[cat]);
+    }
+  });
+}
+
+function setCatPreset(defaultVal, overrideCat, overrideVal) {
+  Object.keys(catSettings).forEach(c => {
+    catSettings[c] = (overrideCat && c === overrideCat) ? overrideVal : defaultVal;
+    updateSegUI(c);
+  });
+  localStorage.setItem('ccw-cat-settings', JSON.stringify(catSettings));
+}
+
+function loadCatSettings() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('ccw-cat-settings'));
+    if (saved) {
+      Object.keys(saved).forEach(k => {
+        const v = saved[k];
+        if (v === 'required' || v === 'proportional' || v === 'atleast1' || v === 'optional') saved[k] = 'included';
+      });
+      Object.assign(catSettings, saved);
+    }
+  } catch(e) {}
+}
+
 function startExam() {
-  const count = parseInt(document.getElementById('q-count').value, 10);
-  const includeGuardian = document.getElementById('guardian-toggle').checked;
+  let count = parseInt(document.getElementById('q-count').value, 10);
 
-  let guardianQs = QUESTIONS.filter(q => q.category === 'Guardian Training');
-  let otherQs = QUESTIONS.filter(q => q.category !== 'Guardian Training');
+  const byCat = {};
+  QUESTIONS.forEach(q => {
+    const s = catSettings[q.category];
+    if (s === 'excluded') return;
+    if (!byCat[q.category]) byCat[q.category] = { setting: s, qs: [] };
+    byCat[q.category].qs.push(q);
+  });
 
-  if (includeGuardian) {
-    const shuffledOthers = shuffle(otherQs);
-    const allGuardian = shuffle(guardianQs);
-    if (count === 0) {
-      examQuestions = shuffle([...allGuardian, ...shuffledOthers]);
-    } else {
-      const remaining = Math.max(0, count - allGuardian.length);
-      examQuestions = shuffle([...allGuardian, ...shuffledOthers.slice(0, remaining)]);
-    }
+  const allCats = Object.keys(byCat).filter(c => byCat[c].setting === 'all');
+  const incCats = Object.keys(byCat).filter(c => byCat[c].setting === 'included');
+
+  if (allCats.length + incCats.length === 0) {
+    alert('All categories are excluded — turn at least one on.');
+    return;
+  }
+
+  const picked = new Set();
+
+  allCats.forEach(c => byCat[c].qs.forEach(q => picked.add(q)));
+
+  incCats.forEach(c => picked.add(shuffle(byCat[c].qs)[0]));
+
+  if (count === 0) {
+    incCats.flatMap(c => byCat[c].qs).forEach(q => picked.add(q));
+    examQuestions = shuffle([...picked]);
   } else {
-    if (count === 0) {
-      examQuestions = shuffle(QUESTIONS);
-    } else {
-      examQuestions = shuffle(QUESTIONS).slice(0, count);
+    const remaining = count - picked.size;
+    if (remaining > 0) {
+      const fillPool = shuffle(
+        incCats.flatMap(c => byCat[c].qs.filter(q => !picked.has(q)))
+      );
+      fillPool.slice(0, remaining).forEach(q => picked.add(q));
     }
+    examQuestions = shuffle([...picked]);
   }
 
   currentIndex = 0;
@@ -3200,15 +3388,12 @@ function goHome() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-document.getElementById('q-count').addEventListener('change', function() {
-  const v = this.value === '0' ? QUESTIONS.length : this.value;
-  document.getElementById('q-count-display').textContent = v;
-});
-
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('sw.js').catch(() => {});
 }
 
+loadCatSettings();
+buildCatFilters();
 renderFlaggedPanel();
 
 (function resumeCheck() {
