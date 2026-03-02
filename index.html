@@ -821,6 +821,7 @@
 
     <div class="btn-group">
       <button class="btn btn-primary" onclick="startExam()">Retake Exam</button>
+      <button class="btn btn-primary" onclick="retakeIncorrect()">Retake Incorrect</button>
       <button class="btn btn-outline" onclick="goHome()">Back to Home</button>
     </div>
 
@@ -1629,10 +1630,10 @@ const QUESTIONS = [
     category: "Situational Awareness",
     question: "The awareness color code system uses which color to indicate a relaxed but alert state?",
     options: [
-      "White (unaware)",
-      "Yellow (relaxed alert)",
-      "Orange (heightened alert)",
-      "Red (imminent threat)"
+      "White",
+      "Yellow",
+      "Orange",
+      "Red"
     ],
     answer: 1,
     explanation: "Condition Yellow represents a relaxed but alert state — you are aware of your surroundings without being paranoid. This is the baseline awareness level recommended for anyone carrying a concealed firearm in public."
@@ -2121,8 +2122,8 @@ const QUESTIONS = [
   {
     category: "General Firearm Safety",
     question: "What types of sight do the handgun shooters use?",
-    options: ["All of the above", "Open-sight", "Telescopic", "Red-dot"],
-    answer: 0,
+    options: ["Open-sight", "Telescopic", "Red-dot", "All of the above"],
+    answer: 3,
     explanation: "Handgun shooters use a variety of sighting systems including traditional open (iron) sights, telescopic (magnified) scopes, and red-dot optics. Each has trade-offs for speed, precision, and situational use."
   },
   {
@@ -2135,8 +2136,8 @@ const QUESTIONS = [
   {
     category: "General Firearm Safety",
     question: "Choke is:",
-    options: ["None of the above", "The taper at the end of shotgun's muzzle", "When you shoot while being strangled", "The taper in front of a shotgun's chamber"],
-    answer: 1,
+    options: ["The taper at the end of shotgun's muzzle", "When you shoot while being strangled", "The taper in front of a shotgun's chamber", "None of the above"],
+    answer: 0,
     explanation: "A choke is a constriction at the muzzle end of a shotgun barrel that controls the spread of the shot pattern. Tighter chokes (like full) keep the pattern narrower at longer distances."
   },
   {
@@ -2205,8 +2206,8 @@ const QUESTIONS = [
   {
     category: "General Firearm Safety",
     question: "Shotgun shells are generally measured by:",
-    options: ["None of the above", "Gauge", "Calibre", "Grains"],
-    answer: 1,
+    options: ["Gauge", "Calibre", "Grains", "None of the above"],
+    answer: 0,
     explanation: "Shotgun bore size is measured in gauge (e.g. 12 gauge, 20 gauge), not caliber. Gauge refers to the number of lead balls of that bore diameter needed to make one pound — so a lower gauge number means a larger bore."
   },
   {
@@ -2219,8 +2220,8 @@ const QUESTIONS = [
   {
     category: "General Firearm Safety",
     question: "What is the most widespread material to make shotgun shots of?",
-    options: ["None of the above", "Lead", "Brass", "Silver"],
-    answer: 1,
+    options: ["Lead", "Brass", "Silver", "None of the above"],
+    answer: 0,
     explanation: "Lead has been the standard material for shotgun pellets due to its density, softness, and low cost. Steel and other non-toxic alternatives are required in some hunting contexts (e.g. waterfowl) but lead remains the most common overall."
   },
   {
@@ -2261,8 +2262,8 @@ const QUESTIONS = [
   {
     category: "General Firearm Safety",
     question: "You have a very old firarms with no datastamp. Before using it, what should you do?",
-    options: ["None of the above", "You must get it examined by a gunsmith", "Ask at gun forums", "Try and see which ammunition fits the chamber of the firearm"],
-    answer: 1,
+    options: ["You must get it examined by a gunsmith", "Ask at gun forums", "Try and see which ammunition fits the chamber of the firearm", "None of the above"],
+    answer: 0,
     explanation: "In case the datastamp is missing, you must get the firearm examined by a qualified gunsmith to know the exact ammunition for it."
   },
   {
@@ -2289,15 +2290,15 @@ const QUESTIONS = [
   {
     category: "Safe Storage Requirements",
     question: "The failure to prevent unauthorized access to stored firearms has resulted in:",
-    options: ["All of the above", "Homicides", "Suicides", "Accidents"],
-    answer: 0,
+    options: ["Homicides", "Suicides", "Accidents", "All of the above"],
+    answer: 3,
     explanation: "Unsecured firearms have contributed to homicides, suicides, and accidental shootings — particularly involving children and unauthorized users. Safe storage (locked containers, trigger locks, gun safes) is a critical responsibility of firearm ownership."
   },
   {
     category: "General Firearm Safety",
     question: "To shoot safely you must know:",
-    options: ["All of the above", "Your target", "Your target's surrounding", "What is beyond the target"],
-    answer: 0,
+    options: ["Your target", "Your target's surrounding", "What is beyond the target", "All of the above"],
+    answer: 3,
     explanation: "NRA Rule: Be sure of your target and what is beyond it. You must positively identify your target, be aware of the surrounding area, and know what a missed or over-penetrating bullet could hit."
   },
   {
@@ -2436,15 +2437,15 @@ const QUESTIONS = [
   {
     category: "General Firearm Safety",
     question: "To load a handgun you need to push the charged magazine into the grip:",
-    options: ["None of the above", "Rudely till you hear the click", "Gently and fast", "Softly and slowly"],
-    answer: 1,
+    options: ["Rudely till you hear the click", "Gently and fast", "Softly and slowly", "None of the above"],
+    answer: 0,
     explanation: "The click tells you that the round on top of the magazine reached the correct position and can be chambered now."
   },
   {
     category: "General Firearm Safety",
     question: "You must notify Police as soon as possible in case your firearm:",
-    options: ["All of the above", "lost", "stolen", "destroyed"],
-    answer: 0,
+    options: ["lost", "stolen", "destroyed", "All of the above"],
+    answer: 3,
     explanation: "As soon as possible! You do not have 14 or 21 days. And it is in your best interests: if your gun was stolen and somebody was shot from that gun, you may face significant problems!"
   },
   {
@@ -2470,7 +2471,7 @@ const QUESTIONS = [
   },
   {
     category: "Safe Storage Requirements",
-    question: "Is it very safe to store a loaded firearm?",
+    question: "It is safe to store a loaded firearm in your home.",
     options: ["True", "False"],
     answer: 1,
     explanation: "In terms of firearms safety it is NOT safe. Especially, if unauthorized people or children can potentially have access to the firearm."
@@ -2478,8 +2479,8 @@ const QUESTIONS = [
   {
     category: "State & Federal Gun Laws",
     question: "It is dangerous and in most cases illegal to shoot:",
-    options: ["All of the above", "From a road", "Across a road", "Onto a road"],
-    answer: 0,
+    options: ["From a road", "Across a road", "Onto a road", "All of the above"],
+    answer: 3,
     explanation: "Discharging a firearm from, across, or onto a public road is both extremely dangerous and illegal in most jurisdictions. Roads are used by vehicles and pedestrians, making any shooting near them a serious safety and legal violation."
   },
   {
@@ -2492,8 +2493,8 @@ const QUESTIONS = [
   {
     category: "General Firearm Safety",
     question: "You are removing a firearm from the vehicle's trunk. You should make sure that:",
-    options: ["None of the above", "butt goes first", "muzzle goes first", "magazine goes first"],
-    answer: 1,
+    options: ["butt goes first", "muzzle goes first", "magazine goes first", "None of the above"],
+    answer: 0,
     explanation: "Never remove a firearm muzzle first! This rule is written in blood of those who were accidentally shot by doing this."
   },
   {
@@ -2541,8 +2542,8 @@ const QUESTIONS = [
   {
     category: "State & Federal Gun Laws",
     question: "Open carry is permitted for:",
-    options: ["None of the above", "All of the above", "long guns", "handguns"],
-    answer: 2,
+    options: ["All of the above", "long guns", "handguns", "None of the above"],
+    answer: 1,
     explanation: "Open carry  of long guns is permitted while hunting and possibly on one's own property. Open carry of unloaded long guns is not explicitly prohibited by any law, but is generally not practiced. It is illegal however to transport an uncased long gun in a motor vehicle, unless it is in the trunk or a compartment not accessible by anyone inside the vehicle."
   },
   {
@@ -2576,8 +2577,8 @@ const QUESTIONS = [
   {
     category: "State & Federal Gun Laws",
     question: "Applications for a Pistol license can be made in the person's county or city of residence to:",
-    options: ["All of the above", "sheriff", "police department", "separate licensing authority"],
-    answer: 0,
+    options: ["sheriff", "police department", "separate licensing authority", "All of the above"],
+    answer: 3,
     explanation: "Under NY Penal Law §400.00, pistol license applications are submitted to the licensing officer in your county or city of residence — which may be the county sheriff, local police department, or a designated licensing authority depending on the jurisdiction."
   },
   {
@@ -2597,8 +2598,8 @@ const QUESTIONS = [
   {
     category: "State & Federal Gun Laws",
     question: "New York Pistol License requires that an applicant should be at least:",
-    options: ["None of the above", "21 years old", "18 years old", "19 years old"],
-    answer: 1,
+    options: ["21 years old", "18 years old", "19 years old", "None of the above"],
+    answer: 0,
     explanation: "The age requirement is reduced to 18 for members or veterans of the US Armed Forces, Reserves or National Guard and those who were honorably discharged."
   },
   {
@@ -2667,8 +2668,8 @@ const QUESTIONS = [
   {
     category: "State & Federal Gun Laws",
     question: "For recertification you will need to provide the following information:",
-    options: ["All of the above", "Date of Birth, Gender and Race", "Address and Social Security number", "Firearms possessed"],
-    answer: 0,
+    options: ["Date of Birth, Gender and Race", "Address and Social Security number", "Firearms possessed", "All of the above"],
+    answer: 3,
     explanation: "The recertification form requires your personal information (name, DOB, gender, race), current address, Social Security number, and a list of all firearms currently possessed on the license."
   },
   {
@@ -2688,8 +2689,8 @@ const QUESTIONS = [
   {
     category: "State & Federal Gun Laws",
     question: "CCW license is valid everywhere, including any:",
-    options: ["None of the above", "airport", "courthouses", "government buildings"],
-    answer: 0,
+    options: ["airport", "courthouses", "government buildings", "None of the above"],
+    answer: 3,
     explanation: "A CCW license does not allow you to carry everywhere. Federal and state law designate many sensitive locations where firearms are prohibited, including airports, courthouses, government buildings, schools, and other restricted areas under the CCIA."
   },
   {
@@ -2708,7 +2709,7 @@ const QUESTIONS = [
   },
   {
     category: "State & Federal Gun Laws",
-    question: "CCW license is valid at buildings or grounds, used for educational purposes (schools, colleges, universities)",
+    question: "A valid CCW license allows you to carry a concealed firearm at schools, colleges, and universities.",
     options: ["True", "False"],
     answer: 1,
     explanation: "Schools, colleges, and universities are sensitive locations where firearms are prohibited under both the federal Gun-Free School Zones Act and New York's CCIA. A CCW license does not override these restrictions."
@@ -2716,8 +2717,8 @@ const QUESTIONS = [
   {
     category: "State & Federal Gun Laws",
     question: "If you transport a firearm through New York state you must:",
-    options: ["All of the above", "legally possess the firearm in the place you started from and in the place you are traveling too", "place the firearm and ammunition in separate locked boxes in the trunk", "make no stops"],
-    answer: 0,
+    options: ["legally possess the firearm in the place you started from and in the place you are traveling too", "place the firearm and ammunition in separate locked boxes in the trunk", "make no stops", "All of the above"],
+    answer: 3,
     explanation: "Under the federal Firearm Owners Protection Act (FOPA), you may transport a firearm through a state where you cannot legally possess it, provided: you can legally possess it at origin and destination, the firearm and ammo are in separate locked containers in the trunk, and you make no unnecessary stops."
   },
   {
@@ -2847,8 +2848,8 @@ const QUESTIONS = [
     category: "General Firearm Safety",
     question: "What is wrong with the pictured grip?",
     image: "data:image/jpeg;base64,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",
-    options: ["None of the above", "The middle finger is on the trigger", "Wrong hand is used", "Shooter should not wear any rings"],
-    answer: 1,
+    options: ["The middle finger is on the trigger", "Wrong hand is used", "Shooter should not wear any rings", "None of the above"],
+    answer: 0,
     explanation: "Only the index finger should be on the trigger. Using the middle finger reduces control and accuracy, and increases the risk of an accidental discharge. Proper trigger finger placement is a fundamental safety skill."
   },
   {
@@ -2863,15 +2864,15 @@ const QUESTIONS = [
     category: "General Firearm Safety",
     question: "The type of the pictured weapon is a:",
     image: "data:image/jpeg;base64,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",
-    options: ["None of the above", "Single Action Revolver", "Double Action Revolver", "Hinge Revolver"],
-    answer: 1,
+    options: ["Single Action Revolver", "Double Action Revolver", "Hinge Revolver", "None of the above"],
+    answer: 0,
     explanation: "The loading gate on the right side behind the cylinder clearly identifies the revolver as a single action one."
   },
   {
     category: "General Firearm Safety",
     question: "The shooter on a picture demonstrates:",
-    options: ["None of the above", "Prone position", "Kneeling position", "Standing position"],
-    answer: 1,
+    options: ["Prone position", "Kneeling position", "Standing position", "None of the above"],
+    answer: 0,
     explanation: "The prone position has the shooter lying flat on the ground, providing maximum stability and the smallest target profile. It is the most accurate shooting position but the least mobile."
   }
 ];
@@ -3384,6 +3385,24 @@ function showResults() {
   });
 
   document.getElementById('review-section').style.display = hasMissed ? 'block' : 'none';
+}
+
+function retakeIncorrect() {
+  const missed = examQuestions.filter((q, i) => answers[i] && !answers[i].correct);
+  if (missed.length === 0) {
+    alert('You got everything right — nothing to retake!');
+    return;
+  }
+  examQuestions = shuffle(missed);
+  currentIndex = 0;
+  answers = {};
+  revealed = {};
+
+  document.getElementById('results').style.display = 'none';
+  document.getElementById('exam').style.display = 'block';
+  document.body.classList.add('exam-active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  renderQuestion();
 }
 
 function goHome() {
