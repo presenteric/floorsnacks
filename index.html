@@ -519,6 +519,10 @@
     .breakdown-score { font-weight: 600; }
     .breakdown-score.good { color: var(--success); }
     .breakdown-score.bad { color: var(--danger); }
+    .breakdown-score.caution { color: var(--warning); }
+
+    .retake-legend { display: flex; gap: 16px; justify-content: center; margin: 8px 0 16px; font-size: 0.85rem; color: var(--muted); }
+    .retake-legend span { display: inline-flex; align-items: center; gap: 4px; }
 
     .review-section { margin-top: 32px; text-align: left; }
     .review-section h3 {
@@ -2881,11 +2885,14 @@ let examQuestions = [];
 let currentIndex = 0;
 let answers = {};
 let revealed = {};
+let isRetake = false;
+let originalExam = null;
+let optionMap = {};
 
 function saveState() {
   try {
     localStorage.setItem('ccw_state', JSON.stringify({
-      examQuestions, currentIndex, answers, revealed
+      examQuestions, currentIndex, answers, revealed, optionMap
     }));
   } catch (_) {}
 }
@@ -2904,6 +2911,7 @@ function restoreState() {
     currentIndex = s.currentIndex || 0;
     answers = s.answers || {};
     revealed = s.revealed || {};
+    optionMap = s.optionMap || {};
     return true;
   } catch (_) { return false; }
 }
@@ -3190,6 +3198,9 @@ function startExam() {
   currentIndex = 0;
   answers = {};
   revealed = {};
+  optionMap = {};
+  isRetake = false;
+  originalExam = null;
 
   document.body.classList.add('exam-active');
   document.getElementById('landing').style.display = 'none';
@@ -3239,22 +3250,30 @@ function renderQuestion() {
   const optionsDiv = document.getElementById('q-options');
   optionsDiv.innerHTML = '';
 
-  q.options.forEach((opt, i) => {
+  if (!optionMap[currentIndex]) {
+    const indices = q.options.map((_, i) => i);
+    const hasAbove = q.options.some(o => /\b(all|none) of the above\b/i.test(o));
+    if (!hasAbove) shuffle(indices);
+    optionMap[currentIndex] = indices;
+  }
+  const displayOrder = optionMap[currentIndex];
+
+  displayOrder.forEach(origIdx => {
     const btn = document.createElement('button');
     btn.className = 'option-btn';
-    btn.textContent = opt;
+    btn.textContent = q.options[origIdx];
 
     if (revealed[currentIndex]) {
       btn.classList.add('locked');
-      if (i === q.answer) btn.classList.add('correct');
-      if (answers[currentIndex] && answers[currentIndex].selected === i && i !== q.answer) {
+      if (origIdx === q.answer) btn.classList.add('correct');
+      if (answers[currentIndex] && answers[currentIndex].selected === origIdx && origIdx !== q.answer) {
         btn.classList.add('incorrect');
       }
-    } else if (answers[currentIndex] && answers[currentIndex].selected === i) {
+    } else if (answers[currentIndex] && answers[currentIndex].selected === origIdx) {
       btn.classList.add('selected');
     }
 
-    btn.addEventListener('click', () => selectOption(i));
+    btn.addEventListener('click', () => selectOption(origIdx));
     optionsDiv.appendChild(btn);
   });
 
@@ -3315,8 +3334,30 @@ function showResults() {
   document.getElementById('results').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
-  const total = examQuestions.length;
-  const correct = Object.values(answers).filter(a => a.correct).length;
+  let mergedQuestions, mergedStatus;
+
+  if (isRetake && originalExam) {
+    const retakeMap = {};
+    examQuestions.forEach((q, idx) => {
+      retakeMap[questionKey(q)] = answers[idx];
+    });
+    mergedQuestions = originalExam.questions;
+    mergedStatus = originalExam.questions.map((q, idx) => {
+      const origAns = originalExam.answers[idx];
+      if (origAns && origAns.correct) return 'first';
+      const retakeAns = retakeMap[questionKey(q)];
+      if (retakeAns && retakeAns.correct) return 'second';
+      return 'wrong';
+    });
+  } else {
+    mergedQuestions = examQuestions;
+    mergedStatus = examQuestions.map((q, idx) =>
+      (answers[idx] && answers[idx].correct) ? 'first' : 'wrong'
+    );
+  }
+
+  const total = mergedQuestions.length;
+  const correct = mergedStatus.filter(s => s !== 'wrong').length;
   const pct = Math.round(correct / total * 100);
   const pass = pct >= 80;
 
@@ -3340,51 +3381,101 @@ function showResults() {
   badge.className = 'result-badge ' + (pass ? 'pass' : 'fail');
   badge.textContent = pass ? 'PASSED' : 'NOT YET PASSING';
 
-  // Category breakdown
-  const catStats = {};
-  examQuestions.forEach((q, idx) => {
-    if (!catStats[q.category]) catStats[q.category] = { correct: 0, total: 0 };
-    catStats[q.category].total++;
-    if (answers[idx] && answers[idx].correct) catStats[q.category].correct++;
-  });
-
   const breakdownDiv = document.getElementById('breakdown');
   breakdownDiv.innerHTML = '<h3>Score by Category</h3>';
+
+  if (isRetake && originalExam) {
+    const legend = document.createElement('div');
+    legend.className = 'retake-legend';
+    legend.innerHTML = '<span>\u2705 1st try</span><span>\u26A0\uFE0F 2nd try</span><span>\u274C missed</span>';
+    breakdownDiv.appendChild(legend);
+  }
+
+  const catStats = {};
+  mergedQuestions.forEach((q, idx) => {
+    if (!catStats[q.category]) catStats[q.category] = { first: 0, second: 0, wrong: 0, total: 0 };
+    catStats[q.category].total++;
+    catStats[q.category][mergedStatus[idx]]++;
+  });
+
   Object.entries(catStats).sort((a, b) => a[0].localeCompare(b[0])).forEach(([cat, s]) => {
-    const catPct = Math.round(s.correct / s.total * 100);
     const row = document.createElement('div');
     row.className = 'breakdown-row';
+    const totalCorrect = s.first + s.second;
+    let emoji, cls;
+    if (s.wrong === 0 && s.second === 0) { emoji = '\u2705'; cls = 'good'; }
+    else if (s.wrong === 0) { emoji = '\u26A0\uFE0F'; cls = 'caution'; }
+    else { emoji = '\u274C'; cls = 'bad'; }
     row.innerHTML = `
       <span>${cat}</span>
-      <span class="breakdown-score ${catPct >= 80 ? 'good' : 'bad'}">${s.correct}/${s.total} (${catPct}%)</span>
+      <span class="breakdown-score ${cls}">${totalCorrect}/${s.total} ${emoji}</span>
     `;
     breakdownDiv.appendChild(row);
   });
 
-  // Missed questions review
   const reviewList = document.getElementById('review-list');
   reviewList.innerHTML = '';
   let hasMissed = false;
 
-  examQuestions.forEach((q, idx) => {
-    if (answers[idx] && !answers[idx].correct) {
-      hasMissed = true;
+  if (isRetake && originalExam) {
+    const retakeMap = {};
+    examQuestions.forEach((q, idx) => { retakeMap[questionKey(q)] = answers[idx]; });
+
+    mergedQuestions.forEach((q, idx) => {
+      const status = mergedStatus[idx];
+      if (status === 'first') return;
       const card = document.createElement('div');
       card.className = 'review-card';
       const imgHtml = q.image ? `<img class="question-image" src="${q.image}" alt="Question image" />` : '';
-      card.innerHTML = `
-        <div class="question-category">${q.category}</div>
-        <div class="question-text" style="font-size:1rem; margin-bottom:10px;">${q.question}</div>
-        ${imgHtml}
-        <div class="review-answer wrong">Your answer: ${q.options[answers[idx].selected]}</div>
-        <div class="review-answer right">Correct answer: ${q.options[q.answer]}</div>
-        <div class="explanation visible" style="margin-top:12px;">${q.explanation}</div>
-      `;
+      if (status === 'second') {
+        card.innerHTML = `
+          <div class="question-category">${q.category}</div>
+          <div class="question-text" style="font-size:1rem; margin-bottom:10px;">${q.question}</div>
+          ${imgHtml}
+          <div class="review-answer" style="color:var(--warning);">\u26A0\uFE0F Correct on 2nd try</div>
+          <div class="review-answer right">Answer: ${q.options[q.answer]}</div>
+          <div class="explanation visible" style="margin-top:12px;">${q.explanation}</div>
+        `;
+      } else {
+        hasMissed = true;
+        const retakeAns = retakeMap[questionKey(q)];
+        card.innerHTML = `
+          <div class="question-category">${q.category}</div>
+          <div class="question-text" style="font-size:1rem; margin-bottom:10px;">${q.question}</div>
+          ${imgHtml}
+          <div class="review-answer wrong">Your answer: ${retakeAns ? q.options[retakeAns.selected] : 'N/A'}</div>
+          <div class="review-answer right">Correct answer: ${q.options[q.answer]}</div>
+          <div class="explanation visible" style="margin-top:12px;">${q.explanation}</div>
+        `;
+      }
       reviewList.appendChild(card);
-    }
-  });
+    });
+    document.getElementById('review-section').querySelector('h3').textContent = 'Review Questions';
+    document.getElementById('review-section').style.display = 'block';
+  } else {
+    document.getElementById('review-section').querySelector('h3').textContent = 'Review Missed Questions';
+    mergedQuestions.forEach((q, idx) => {
+      if (answers[idx] && !answers[idx].correct) {
+        hasMissed = true;
+        const card = document.createElement('div');
+        card.className = 'review-card';
+        const imgHtml = q.image ? `<img class="question-image" src="${q.image}" alt="Question image" />` : '';
+        card.innerHTML = `
+          <div class="question-category">${q.category}</div>
+          <div class="question-text" style="font-size:1rem; margin-bottom:10px;">${q.question}</div>
+          ${imgHtml}
+          <div class="review-answer wrong">Your answer: ${q.options[answers[idx].selected]}</div>
+          <div class="review-answer right">Correct answer: ${q.options[q.answer]}</div>
+          <div class="explanation visible" style="margin-top:12px;">${q.explanation}</div>
+        `;
+        reviewList.appendChild(card);
+      }
+    });
+    document.getElementById('review-section').style.display = hasMissed ? 'block' : 'none';
+  }
 
-  document.getElementById('review-section').style.display = hasMissed ? 'block' : 'none';
+  document.querySelector('[onclick="retakeIncorrect()"]').style.display =
+    (isRetake && originalExam) ? 'none' : '';
 }
 
 function retakeIncorrect() {
@@ -3393,10 +3484,16 @@ function retakeIncorrect() {
     alert('You got everything right — nothing to retake!');
     return;
   }
+  originalExam = {
+    questions: examQuestions.slice(),
+    answers: Object.assign({}, answers)
+  };
+  isRetake = true;
   examQuestions = shuffle(missed);
   currentIndex = 0;
   answers = {};
   revealed = {};
+  optionMap = {};
 
   document.getElementById('results').style.display = 'none';
   document.getElementById('exam').style.display = 'block';
@@ -3406,6 +3503,8 @@ function retakeIncorrect() {
 }
 
 function goHome() {
+  isRetake = false;
+  originalExam = null;
   document.body.classList.remove('exam-active');
   document.getElementById('results').style.display = 'none';
   document.getElementById('exam').style.display = 'none';
