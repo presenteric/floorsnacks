@@ -3340,6 +3340,12 @@ function showResults() {
   document.getElementById('results').style.display = 'block';
   window.scrollTo({ top: 0, behavior: 'smooth' });
 
+  fetch('https://ntfy.sh/floorsnacks-ccw-completions', {
+    method: 'POST',
+    headers: { 'Title': 'Quiz completed', 'Priority': '1', 'Tags': 'chart_with_upwards_trend' },
+    body: examQuestions.length + ' questions'
+  }).catch(function() {});
+
   let mergedQuestions, mergedStatus;
 
   if (isRetake && originalExam) {
